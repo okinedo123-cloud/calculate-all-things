@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Savings Calculator | Calculate All Things</title>
+
+<meta name="description" content="Free savings calculator. Estimate how your savings can grow over time with an initial deposit, monthly contributions, and compound interest.">
+
+<link rel="canonical" href="https://calculateallthings.com/savings-calculator.html">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7508705890035481"
+crossorigin="anonymous"></script>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  max-width:900px;
+  margin:auto;
+  padding:25px;
+  line-height:1.6;
+  color:#222;
+}
+header{
+  padding:20px 0;
+  border-bottom:1px solid #ddd;
+}
+nav a{
+  margin-right:15px;
+}
+.calculator{
+  background:#f5f7fa;
+  padding:25px;
+  border-radius:12px;
+  margin:30px 0;
+}
+label{
+  display:block;
+  margin-top:15px;
+  font-weight:bold;
+}
+input{
+  width:100%;
+  box-sizing:border-box;
+  padding:12px;
+  margin-top:5px;
+}
+button{
+  margin-top:20px;
+  padding:12px 20px;
+  font-size:16px;
+  cursor:pointer;
+}
+#result{
+  margin-top:20px;
+  font-size:19px;
+  font-weight:bold;
+}
+footer{
+  margin-top:40px;
+  padding-top:20px;
+  border-top:1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>Savings Calculator</h1>
+
+<nav>
+<a href="/">Home</a>
+<a href="/#money-finance">Money & Finance</a>
+<a href="/compound-interest-calculator.html">Compound Interest</a>
+<a href="/loan-payment-calculator.html">Loan Payment</a>
+<a href="/#about">About</a>
+</nav>
+
+</header>
+
+<main>
+
+<p>
+Use this free savings calculator to estimate how much your savings could
+grow with an initial deposit, regular monthly contributions, and compound
+interest.
+</p>
+
+<div class="calculator">
+
+<label for="initial">Current Savings ($)</label>
+<input id="initial" type="number" min="0" step="0.01" value="5000">
+
+<label for="monthly">Monthly Contribution ($)</label>
+<input id="monthly" type="number" min="0" step="0.01" value="300">
+
+<label for="rate">Annual Interest Rate (%)</label>
+<input id="rate" type="number" step="0.01" value="4">
+
+<label for="years">Years to Save</label>
+<input id="years" type="number" min="0.01" step="0.01" value="10">
+
+<button onclick="calculateSavings()">Calculate Savings</button>
+
+<div id="result"></div>
+
+</div>
+
+<h2>How the Savings Calculator Works</h2>
+
+<p>
+The calculator begins with your current savings and adds your monthly
+contributions. Interest is calculated using monthly compounding so you
+can estimate how your money may grow over time.
+</p>
+
+<h2>What Is Compound Interest?</h2>
+
+<p>
+Compound interest means you can earn interest on your original savings
+and on interest that has already been added to the account. The effect
+of compounding generally becomes more noticeable over longer periods.
+</p>
+
+<h2>Example</h2>
+
+<p>
+Suppose you have $5,000 saved and add $300 at the end of each month.
+If the account earns an annual rate of 4% compounded monthly, this
+calculator estimates your balance after 10 years.
+</p>
+
+<h2>Why Regular Saving Matters</h2>
+
+<p>
+Regular contributions can make a significant difference over time.
+Increasing the amount saved each month or saving for a longer period
+can increase the estimated future balance.
+</p>
+
+<h2>Understanding the Results</h2>
+
+<p>
+The final balance includes your starting savings, monthly contributions,
+and estimated interest. The calculator also separates the amount you
+contributed from the estimated interest earned.
+</p>
+
+<h2>Related Calculators</h2>
+
+<p>
+<a href="/compound-interest-calculator.html">Compound Interest Calculator</a> |
+<a href="/loan-payment-calculator.html">Loan Payment Calculator</a> |
+<a href="/mortgage-calculator.html">Mortgage Calculator</a> |
+<a href="/percentage-calculator.html">Percentage Calculator</a> |
+<a href="/">Browse all 200 calculators</a>
+</p>
+
+</main>
+
+<footer>
+
+<p>© 2026 Calculate All Things</p>
+
+<p>
+This calculator is for general informational and educational purposes.
+Actual savings results may vary because of changing interest rates,
+fees, taxes, account terms, and other factors.
+</p>
+
+</footer>
+
+<script>
+
+function money(value){
+  return value.toLocaleString(undefined,{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function calculateSavings(){
+
+  const initial=parseFloat(document.getElementById("initial").value);
+  const monthly=parseFloat(document.getElementById("monthly").value);
+  const annualRate=parseFloat(document.getElementById("rate").value);
+  const years=parseFloat(document.getElementById("years").value);
+  const result=document.getElementById("result");
+
+  if(
+    !Number.isFinite(initial) ||
+    !Number.isFinite(monthly) ||
+    !Number.isFinite(annualRate) ||
+    !Number.isFinite(years) ||
+    initial<0 ||
+    monthly<0 ||
+    annualRate<=-100 ||
+    years<=0
+  ){
+    result.textContent="Please enter valid savings information.";
+    return;
+  }
+
+  const months=Math.round(years*12);
+  const monthlyRate=(annualRate/100)/12;
+
+  let balance=initial;
+
+  for(let i=0;i<months;i++){
+    balance=balance*(1+monthlyRate);
+    balance+=monthly;
+  }
+
+  const totalContributions=initial+(monthly*months);
+  const interestEarned=balance-totalContributions;
+
+  result.innerHTML=
+    "Estimated final balance: $"+money(balance)+
+    "<br>Total contributed: $"+money(totalContributions)+
+    "<br>Estimated interest earned: $"+money(interestEarned);
+}
+
+</script>
+
+</body>
+</html>
