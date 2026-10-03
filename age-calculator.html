@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Age Calculator | Calculate All Things</title>
+
+<meta name="description" content="Free age calculator. Calculate your exact age in years, months and days from your date of birth.">
+
+<link rel="canonical" href="https://calculateallthings.com/age-calculator.html">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7508705890035481"
+crossorigin="anonymous"></script>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  max-width:900px;
+  margin:auto;
+  padding:25px;
+  line-height:1.6;
+  color:#222;
+}
+header{
+  padding:20px 0;
+  border-bottom:1px solid #ddd;
+}
+nav a{
+  margin-right:15px;
+}
+.calculator{
+  background:#f5f7fa;
+  padding:25px;
+  border-radius:12px;
+  margin:30px 0;
+}
+label{
+  display:block;
+  margin-top:15px;
+  font-weight:bold;
+}
+input{
+  width:100%;
+  box-sizing:border-box;
+  padding:12px;
+  margin-top:5px;
+}
+button{
+  margin-top:20px;
+  padding:12px 20px;
+  font-size:16px;
+  cursor:pointer;
+}
+#result{
+  margin-top:20px;
+  font-size:19px;
+  font-weight:bold;
+}
+footer{
+  margin-top:40px;
+  padding-top:20px;
+  border-top:1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Age Calculator</h1>
+
+<nav>
+<a href="/">Home</a>
+<a href="/#date-time">Date & Time</a>
+<a href="/percentage-calculator.html">Percentage Calculator</a>
+<a href="/#about">About</a>
+</nav>
+</header>
+
+<main>
+
+<p>
+Use this free age calculator to calculate your age in years, months,
+and days based on your date of birth.
+</p>
+
+<div class="calculator">
+
+<label for="birthDate">Date of Birth</label>
+<input id="birthDate" type="date">
+
+<label for="ageDate">Calculate Age On</label>
+<input id="ageDate" type="date">
+
+<button onclick="calculateAge()">Calculate Age</button>
+
+<div id="result"></div>
+
+</div>
+
+<h2>How the Age Calculator Works</h2>
+
+<p>
+The calculator compares your date of birth with the date on which you
+want your age calculated. It then determines the completed years,
+months, and days between the two dates.
+</p>
+
+<h2>What Can You Use It For?</h2>
+
+<p>
+You can use the age calculator to determine a person's current age or
+their age on a specific past or future date. It can be useful for
+birthdays, forms, records, planning, and other everyday calculations.
+</p>
+
+<h2>Why Age Is More Than a Year Difference</h2>
+
+<p>
+Simply subtracting birth years may give an incorrect result if the
+birthday has not yet occurred in the year being examined. This
+calculator takes the month and day into account.
+</p>
+
+<h2>Example</h2>
+
+<p>
+Someone born on January 15, 2000 will not turn 27 until January 15,
+2027. Before that date, the person's completed age remains 26 years.
+</p>
+
+<h2>Related Calculators</h2>
+
+<p>
+<a href="/percentage-calculator.html">Percentage Calculator</a> |
+<a href="/savings-calculator.html">Savings Calculator</a> |
+<a href="/compound-interest-calculator.html">Compound Interest Calculator</a> |
+<a href="/">Browse all 200 calculators</a>
+</p>
+
+</main>
+
+<footer>
+<p>© 2026 Calculate All Things</p>
+<p>Results are provided for general informational purposes.</p>
+</footer>
+
+<script>
+
+function parseDate(value){
+  const parts=value.split("-");
+  return new Date(
+    Number(parts[0]),
+    Number(parts[1])-1,
+    Number(parts[2])
+  );
+}
+
+function calculateAge(){
+
+  const birthValue=document.getElementById("birthDate").value;
+  const ageValue=document.getElementById("ageDate").value;
+  const result=document.getElementById("result");
+
+  if(!birthValue || !ageValue){
+    result.textContent="Please enter both dates.";
+    return;
+  }
+
+  const birth=parseDate(birthValue);
+  const end=parseDate(ageValue);
+
+  if(end < birth){
+    result.textContent="The calculation date must be after the date of birth.";
+    return;
+  }
+
+  let years=end.getFullYear()-birth.getFullYear();
+  let months=end.getMonth()-birth.getMonth();
+  let days=end.getDate()-birth.getDate();
+
+  if(days<0){
+    months--;
+    const previousMonthDays=
+      new Date(end.getFullYear(),end.getMonth(),0).getDate();
+    days+=previousMonthDays;
+  }
+
+  if(months<0){
+    years--;
+    months+=12;
+  }
+
+  result.innerHTML=
+    "Age: "+years+" years, "+months+" months, and "+days+" days.";
+}
+
+document.getElementById("ageDate").value =
+  new Date().toISOString().split("T")[0];
+
+</script>
+
+</body>
+</html>
