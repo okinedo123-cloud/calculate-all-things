@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BMI Calculator | Calculate All Things</title>
+<meta name="description" content="Free BMI calculator for adults. Enter your height and weight to calculate body mass index and see the corresponding BMI category.">
+<link rel="canonical" href="https://calculateallthings.com/bmi-calculator.html">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7508705890035481"
+crossorigin="anonymous"></script>
+
+<style>
+body{font-family:Arial,sans-serif;max-width:900px;margin:auto;padding:25px;line-height:1.6;color:#222}
+header{padding:20px 0;border-bottom:1px solid #ddd}
+nav a{margin-right:15px}
+.calculator{background:#f5f7fa;padding:25px;border-radius:12px;margin:30px 0}
+label{display:block;margin-top:15px;font-weight:bold}
+input{width:100%;box-sizing:border-box;padding:12px;margin-top:5px}
+button{margin-top:20px;padding:12px 20px;font-size:16px;cursor:pointer}
+#result{margin-top:20px;font-size:20px;font-weight:bold}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid #ddd}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>BMI Calculator</h1>
+<nav>
+<a href="/">Home</a>
+<a href="/#health">Health</a>
+<a href="/#about">About</a>
+<a href="/#privacy">Privacy</a>
+</nav>
+</header>
+
+<main>
+
+<p>Use this free adult BMI calculator to estimate your body mass index from your height and weight. BMI is a screening measure and does not diagnose an individual's health or body composition.</p>
+
+<div class="calculator">
+
+<label for="weight">Weight (lb)</label>
+<input id="weight" type="number" min="1" step="0.1" value="180">
+
+<label for="feet">Height (feet)</label>
+<input id="feet" type="number" min="1" step="1" value="5">
+
+<label for="inches">Additional inches</label>
+<input id="inches" type="number" min="0" max="11.99" step="0.1" value="10">
+
+<button onclick="calculateBMI()">Calculate BMI</button>
+
+<div id="result"></div>
+
+</div>
+
+<h2>How BMI Is Calculated</h2>
+
+<p>For measurements in pounds and inches, BMI is calculated by dividing weight in pounds by height in inches squared and multiplying the result by 703.</p>
+
+<h2>BMI Formula</h2>
+
+<p><strong>BMI = 703 × weight (lb) ÷ height (in)<sup>2</sup></strong></p>
+
+<h2>Adult BMI Categories</h2>
+
+<p>For adults, commonly used BMI categories are: underweight below 18.5, healthy weight 18.5 to 24.9, overweight 25.0 to 29.9, and obesity 30.0 or higher.</p>
+
+<h2>Example</h2>
+
+<p>A person who weighs 180 pounds and is 5 feet 10 inches tall has a BMI of approximately 25.8.</p>
+
+<h2>Important Limitations</h2>
+
+<p>BMI is a screening measure rather than a direct measurement of body fat. It does not distinguish fat from muscle or account for all differences in age, sex, body composition, pregnancy, or individual health circumstances. Discuss questions about weight or health with an appropriate healthcare professional.</p>
+
+<h2>Related Calculators</h2>
+
+<p><a href="/">Browse all 200 calculators on Calculate All Things</a>.</p>
+
+</main>
+
+<footer>
+<p>© 2026 Calculate All Things</p>
+<p>This calculator is provided for general educational and informational purposes and is not a substitute for professional medical advice, diagnosis, or treatment.</p>
+</footer>
+
+<script>
+function calculateBMI(){
+ const weight=parseFloat(document.getElementById("weight").value);
+ const feet=parseFloat(document.getElementById("feet").value);
+ const inches=parseFloat(document.getElementById("inches").value);
+ const result=document.getElementById("result");
+
+ if(!Number.isFinite(weight)||!Number.isFinite(feet)||!Number.isFinite(inches)||weight<=0||feet<0||inches<0){
+   result.textContent="Please enter a valid height and weight.";
+   return;
+ }
+
+ const totalInches=(feet*12)+inches;
+
+ if(totalInches<=0){
+   result.textContent="Please enter a valid height.";
+   return;
+ }
+
+ const bmi=703*weight/(totalInches*totalInches);
+
+ let category;
+ if(bmi<18.5) category="Underweight";
+ else if(bmi<25) category="Healthy weight";
+ else if(bmi<30) category="Overweight";
+ else category="Obesity";
+
+ result.innerHTML=
+   "BMI: "+bmi.toFixed(1)+
+   "<br>Adult BMI category: "+category;
+}
+</script>
+
+</body>
+</html>
