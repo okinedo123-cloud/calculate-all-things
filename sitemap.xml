@@ -1,1 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://calculateallthings.com/</loc></url></urlset>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://calculateallthings.com/</loc>
+  </url>
+
+  <url>
+    <loc>https://calculateallthings.com/mortgage-calculator.html</loc>
+  </url>
+
+  <url>
+    <loc>https://calculateallthings.com/bmi-calculator.html</loc>
+  </url>
+
+  <url>
+    <loc>https://calculateallthings.com/percentage-calculator.html</loc>
+  </url>
+
+  <url>
+    <loc>https://calculateallthings.com/compound-interest-calculator.html</loc>
+  </url>
+
+  <url>
+    <loc>https://calculateallthings.com/loan-payment-calculator.html</loc>
+  </url>
+
+  <url>
+    <loc>https://calculateallthings.com/savings-calculator.html</loc>
+  </url>
+
+  <url>
+    <loc>https://calculateallthings.com/age-calculator.html</loc>
+  </url>
+
+  <url>
+    <loc>https://calculateallthings.com/currency-converter.html</loc>
+  </url>
+
+  <url>
+    <loc>https://calculateallthings.com/investment-return-calculator.html</loc>
+  </url>
+
+  <url>
+    <loc>https://calculateallthings.com/retirement-calculator.html</loc>
+  </url>
+
+</urlset>
