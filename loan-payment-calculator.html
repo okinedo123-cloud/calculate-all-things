@@ -1,0 +1,247 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Loan Payment Calculator | Calculate All Things</title>
+
+<meta name="description" content="Free loan payment calculator. Estimate monthly loan payments, total payments, and total interest for a fixed-rate loan.">
+
+<link rel="canonical" href="https://calculateallthings.com/loan-payment-calculator.html">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7508705890035481"
+crossorigin="anonymous"></script>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  max-width:900px;
+  margin:auto;
+  padding:25px;
+  line-height:1.6;
+  color:#222;
+}
+
+header{
+  padding:20px 0;
+  border-bottom:1px solid #ddd;
+}
+
+nav a{
+  margin-right:15px;
+}
+
+.calculator{
+  background:#f5f7fa;
+  padding:25px;
+  border-radius:12px;
+  margin:30px 0;
+}
+
+label{
+  display:block;
+  margin-top:15px;
+  font-weight:bold;
+}
+
+input{
+  width:100%;
+  box-sizing:border-box;
+  padding:12px;
+  margin-top:5px;
+}
+
+button{
+  margin-top:20px;
+  padding:12px 20px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+#result{
+  margin-top:20px;
+  font-size:19px;
+  font-weight:bold;
+}
+
+footer{
+  margin-top:40px;
+  padding-top:20px;
+  border-top:1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>Loan Payment Calculator</h1>
+
+<nav>
+<a href="/">Home</a>
+<a href="/#money-finance">Money & Finance</a>
+<a href="/mortgage-calculator.html">Mortgage Calculator</a>
+<a href="/compound-interest-calculator.html">Compound Interest</a>
+<a href="/#about">About</a>
+</nav>
+
+</header>
+
+<main>
+
+<p>
+Use this free loan payment calculator to estimate the monthly payment,
+total amount paid, and total interest for a fixed-rate loan.
+</p>
+
+<div class="calculator">
+
+<label for="amount">Loan Amount ($)</label>
+<input id="amount" type="number" min="0" step="0.01" value="25000">
+
+<label for="rate">Annual Interest Rate (%)</label>
+<input id="rate" type="number" min="0" step="0.01" value="6.5">
+
+<label for="years">Loan Term (Years)</label>
+<input id="years" type="number" min="0.01" step="0.01" value="5">
+
+<button onclick="calculateLoan()">Calculate Payment</button>
+
+<div id="result"></div>
+
+</div>
+
+<h2>How the Loan Payment Calculator Works</h2>
+
+<p>
+The calculator estimates payments for a standard fixed-rate installment
+loan. Your monthly payment is calculated using the loan amount, interest
+rate, and repayment period.
+</p>
+
+<h2>Loan Payment Formula</h2>
+
+<p>The standard monthly payment formula is:</p>
+
+<p>
+<strong>
+M = P × [r(1 + r)<sup>n</sup>] ÷ [(1 + r)<sup>n</sup> − 1]
+</strong>
+</p>
+
+<p>
+Where <strong>M</strong> is the monthly payment,
+<strong>P</strong> is the loan principal,
+<strong>r</strong> is the monthly interest rate, and
+<strong>n</strong> is the total number of monthly payments.
+</p>
+
+<h2>Example</h2>
+
+<p>
+For example, a $25,000 loan at a 6.5% annual interest rate for 5 years
+requires 60 monthly payments. The calculator estimates the monthly
+payment as well as the total amount and interest paid over the life of
+the loan.
+</p>
+
+<h2>What Is Included?</h2>
+
+<p>
+This calculator estimates principal and interest for a fixed-rate loan.
+Actual lender payments may differ because of fees, insurance, taxes,
+origination charges, late fees, or other costs.
+</p>
+
+<h2>Why Loan Term Matters</h2>
+
+<p>
+A longer loan term generally lowers the monthly payment but may increase
+the total interest paid. A shorter term generally results in a higher
+monthly payment but can reduce total interest.
+</p>
+
+<h2>Related Calculators</h2>
+
+<p>
+<a href="/mortgage-calculator.html">Mortgage Calculator</a> |
+<a href="/compound-interest-calculator.html">Compound Interest Calculator</a> |
+<a href="/percentage-calculator.html">Percentage Calculator</a> |
+<a href="/">Browse all 200 calculators</a>
+</p>
+
+</main>
+
+<footer>
+
+<p>© 2026 Calculate All Things</p>
+
+<p>
+This calculator is provided for general informational and educational
+purposes only. Results are estimates and are not financial or lending advice.
+</p>
+
+</footer>
+
+<script>
+
+function money(value){
+  return value.toLocaleString(undefined,{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function calculateLoan(){
+
+  const principal=parseFloat(document.getElementById("amount").value);
+  const annualRate=parseFloat(document.getElementById("rate").value);
+  const years=parseFloat(document.getElementById("years").value);
+  const result=document.getElementById("result");
+
+  if(
+    !Number.isFinite(principal) ||
+    !Number.isFinite(annualRate) ||
+    !Number.isFinite(years) ||
+    principal<=0 ||
+    annualRate<0 ||
+    years<=0
+  ){
+    result.textContent="Please enter valid loan information.";
+    return;
+  }
+
+  const months=Math.round(years*12);
+  const monthlyRate=(annualRate/100)/12;
+
+  let monthlyPayment;
+
+  if(monthlyRate===0){
+    monthlyPayment=principal/months;
+  }else{
+    monthlyPayment=
+      principal *
+      (
+        monthlyRate*Math.pow(1+monthlyRate,months)
+      ) /
+      (
+        Math.pow(1+monthlyRate,months)-1
+      );
+  }
+
+  const totalPayments=monthlyPayment*months;
+  const totalInterest=totalPayments-principal;
+
+  result.innerHTML=
+    "Estimated monthly payment: $"+money(monthlyPayment)+
+    "<br>Total of payments: $"+money(totalPayments)+
+    "<br>Total interest: $"+money(totalInterest);
+}
+
+</script>
+
+</body>
+</html>
