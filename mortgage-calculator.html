@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mortgage Calculator | Calculate All Things</title>
+<meta name="description" content="Free mortgage calculator to estimate monthly principal and interest payments based on home price, down payment, interest rate and loan term.">
+<link rel="canonical" href="https://calculateallthings.com/mortgage-calculator.html">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7508705890035481"
+crossorigin="anonymous"></script>
+
+<style>
+body{font-family:Arial,sans-serif;max-width:900px;margin:auto;padding:25px;line-height:1.6;color:#222}
+header{padding:20px 0;border-bottom:1px solid #ddd}
+nav a{margin-right:15px}
+.calculator{background:#f5f7fa;padding:25px;border-radius:12px;margin:30px 0}
+label{display:block;margin-top:15px;font-weight:bold}
+input{width:100%;box-sizing:border-box;padding:12px;margin-top:5px}
+button{margin-top:20px;padding:12px 20px;font-size:16px;cursor:pointer}
+#result{margin-top:20px;font-size:20px;font-weight:bold}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid #ddd}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Mortgage Calculator</h1>
+<nav>
+<a href="/">Home</a>
+<a href="/#money-finance">Money & Finance</a>
+<a href="/#about">About</a>
+<a href="/#privacy">Privacy</a>
+</nav>
+</header>
+
+<main>
+
+<p>Use this free mortgage calculator to estimate the monthly principal and interest payment on a fixed-rate home loan.</p>
+
+<div class="calculator">
+
+<label for="price">Home Price ($)</label>
+<input id="price" type="number" min="0" step="0.01" value="350000">
+
+<label for="down">Down Payment ($)</label>
+<input id="down" type="number" min="0" step="0.01" value="70000">
+
+<label for="rate">Annual Interest Rate (%)</label>
+<input id="rate" type="number" min="0" step="0.01" value="6.5">
+
+<label for="years">Loan Term (Years)</label>
+<input id="years" type="number" min="1" step="1" value="30">
+
+<button onclick="calculateMortgage()">Calculate Mortgage</button>
+
+<div id="result"></div>
+
+</div>
+
+<h2>How the Mortgage Calculator Works</h2>
+
+<p>The calculator first subtracts your down payment from the home price to determine the amount borrowed. It then uses the standard fixed-rate mortgage formula to estimate the monthly principal and interest payment.</p>
+
+<h2>Mortgage Payment Formula</h2>
+
+<p>The monthly payment is calculated using:</p>
+
+<p><strong>M = P × [r(1+r)<sup>n</sup>] ÷ [(1+r)<sup>n</sup> − 1]</strong></p>
+
+<p>Where <strong>P</strong> is the loan principal, <strong>r</strong> is the monthly interest rate, and <strong>n</strong> is the total number of monthly payments.</p>
+
+<h2>Example</h2>
+
+<p>For a $350,000 home with a $70,000 down payment, the loan principal is $280,000. Enter the interest rate and loan term above to estimate the monthly principal and interest payment.</p>
+
+<h2>What Is Not Included?</h2>
+
+<p>This estimate includes principal and interest only. Your actual housing payment may also include property taxes, homeowners insurance, mortgage insurance, homeowners association fees and other costs.</p>
+
+<h2>Related Calculators</h2>
+
+<p><a href="/">Browse all 200 calculators on Calculate All Things</a>.</p>
+
+</main>
+
+<footer>
+<p>© 2026 Calculate All Things</p>
+<p>Calculators are provided for general informational and educational purposes. Results are estimates and should not be considered financial advice.</p>
+</footer>
+
+<script>
+function calculateMortgage(){
+ const price=parseFloat(document.getElementById("price").value);
+ const down=parseFloat(document.getElementById("down").value);
+ const annualRate=parseFloat(document.getElementById("rate").value);
+ const years=parseFloat(document.getElementById("years").value);
+ const result=document.getElementById("result");
+
+ if(!Number.isFinite(price)||!Number.isFinite(down)||!Number.isFinite(annualRate)||!Number.isFinite(years)||price<=0||down<0||annualRate<0||years<=0||down>=price){
+   result.textContent="Please enter valid values. The down payment must be less than the home price.";
+   return;
+ }
+
+ const principal=price-down;
+ const months=Math.round(years*12);
+ const monthlyRate=annualRate/100/12;
+
+ let payment;
+
+ if(monthlyRate===0){
+   payment=principal/months;
+ }else{
+   payment=principal*(monthlyRate*Math.pow(1+monthlyRate,months))/(Math.pow(1+monthlyRate,months)-1);
+ }
+
+ const totalPayments=payment*months;
+ const totalInterest=totalPayments-principal;
+
+ result.innerHTML=
+   "Loan amount: $"+principal.toLocaleString(undefined,{maximumFractionDigits:2})+
+   "<br>Estimated monthly principal & interest: $"+payment.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+
+   "<br>Total of payments: $"+totalPayments.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+
+   "<br>Total interest: $"+totalInterest.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+</script>
+
+</body>
+</html>
