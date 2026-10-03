@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Currency Converter | Calculate All Things</title>
+
+<meta name="description" content="Free currency converter. Convert amounts between major world currencies using an exchange rate you enter.">
+
+<link rel="canonical" href="https://calculateallthings.com/currency-converter.html">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7508705890035481"
+crossorigin="anonymous"></script>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  max-width:900px;
+  margin:auto;
+  padding:25px;
+  line-height:1.6;
+  color:#222;
+}
+header{
+  padding:20px 0;
+  border-bottom:1px solid #ddd;
+}
+nav a{
+  margin-right:15px;
+}
+.calculator{
+  background:#f5f7fa;
+  padding:25px;
+  border-radius:12px;
+  margin:30px 0;
+}
+label{
+  display:block;
+  margin-top:15px;
+  font-weight:bold;
+}
+input,select{
+  width:100%;
+  box-sizing:border-box;
+  padding:12px;
+  margin-top:5px;
+}
+button{
+  margin-top:20px;
+  padding:12px 20px;
+  font-size:16px;
+  cursor:pointer;
+}
+#result{
+  margin-top:20px;
+  font-size:19px;
+  font-weight:bold;
+}
+.note{
+  background:#fff8dc;
+  padding:15px;
+  border-radius:8px;
+  margin-top:20px;
+}
+footer{
+  margin-top:40px;
+  padding-top:20px;
+  border-top:1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>Currency Converter</h1>
+
+<nav>
+<a href="/">Home</a>
+<a href="/#currency-exchange">Currency & Exchange</a>
+<a href="/percentage-calculator.html">Percentage Calculator</a>
+<a href="/#about">About</a>
+</nav>
+
+</header>
+
+<main>
+
+<p>
+Use this free currency converter to convert an amount from one currency
+to another using the exchange rate you enter.
+</p>
+
+<div class="calculator">
+
+<label for="amount">Amount</label>
+<input id="amount" type="number" min="0" step="0.01" value="100">
+
+<label for="fromCurrency">From Currency</label>
+<select id="fromCurrency">
+<option value="USD">USD — US Dollar</option>
+<option value="EUR">EUR — Euro</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="CAD">CAD — Canadian Dollar</option>
+<option value="AUD">AUD — Australian Dollar</option>
+<option value="JPY">JPY — Japanese Yen</option>
+<option value="CHF">CHF — Swiss Franc</option>
+<option value="CNY">CNY — Chinese Yuan</option>
+<option value="INR">INR — Indian Rupee</option>
+<option value="NGN">NGN — Nigerian Naira</option>
+<option value="ZAR">ZAR — South African Rand</option>
+<option value="MXN">MXN — Mexican Peso</option>
+<option value="BRL">BRL — Brazilian Real</option>
+</select>
+
+<label for="toCurrency">To Currency</label>
+<select id="toCurrency">
+<option value="EUR">EUR — Euro</option>
+<option value="USD">USD — US Dollar</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="CAD">CAD — Canadian Dollar</option>
+<option value="AUD">AUD — Australian Dollar</option>
+<option value="JPY">JPY — Japanese Yen</option>
+<option value="CHF">CHF — Swiss Franc</option>
+<option value="CNY">CNY — Chinese Yuan</option>
+<option value="INR">INR — Indian Rupee</option>
+<option value="NGN">NGN — Nigerian Naira</option>
+<option value="ZAR">ZAR — South African Rand</option>
+<option value="MXN">MXN — Mexican Peso</option>
+<option value="BRL">BRL — Brazilian Real</option>
+</select>
+
+<label for="rate">Exchange Rate</label>
+<input id="rate" type="number" min="0.000001" step="any" value="1">
+
+<p>
+Enter how many units of the <strong>To Currency</strong> equal
+1 unit of the <strong>From Currency</strong>.
+</p>
+
+<button onclick="convertCurrency()">Convert Currency</button>
+
+<div id="result"></div>
+
+<div class="note">
+<strong>Important:</strong> This calculator does not automatically retrieve
+live exchange rates. Enter the current exchange rate you want to use.
+</div>
+
+</div>
+
+<h2>How Currency Conversion Works</h2>
+
+<p>
+Currency conversion compares the value of one currency with another.
+Exchange rates change over time because of financial markets, monetary
+policy, economic conditions, and other factors.
+</p>
+
+<h2>Currency Conversion Formula</h2>
+
+<p>
+<strong>Converted Amount = Original Amount × Exchange Rate</strong>
+</p>
+
+<p>
+For example, if 1 US dollar equals 0.90 euros, converting $100 at an
+exchange rate of 0.90 produces €90.
+</p>
+
+<h2>Why Your Actual Exchange May Be Different</h2>
+
+<p>
+Banks, credit card companies, currency exchanges, and other financial
+services may use different exchange rates and may charge transaction,
+conversion, or service fees. Therefore, the amount you actually receive
+may differ from this calculator's estimate.
+</p>
+
+<h2>Common Uses</h2>
+
+<p>
+A currency converter can be useful when planning international travel,
+comparing overseas purchases, estimating business expenses, reviewing
+international transactions, or converting prices between currencies.
+</p>
+
+<h2>Related Calculators</h2>
+
+<p>
+<a href="/percentage-calculator.html">Percentage Calculator</a> |
+<a href="/savings-calculator.html">Savings Calculator</a> |
+<a href="/compound-interest-calculator.html">Compound Interest Calculator</a> |
+<a href="/">Browse all 200 calculators</a>
+</p>
+
+</main>
+
+<footer>
+
+<p>© 2026 Calculate All Things</p>
+
+<p>
+This calculator is provided for general informational purposes.
+Exchange rates fluctuate, and results should not be considered a quote
+or guarantee of the rate available from a financial institution.
+</p>
+
+</footer>
+
+<script>
+
+function convertCurrency(){
+
+  const amount=parseFloat(document.getElementById("amount").value);
+  const rate=parseFloat(document.getElementById("rate").value);
+
+  const from=document.getElementById("fromCurrency").value;
+  const to=document.getElementById("toCurrency").value;
+
+  const result=document.getElementById("result");
+
+  if(
+    !Number.isFinite(amount) ||
+    !Number.isFinite(rate) ||
+    amount<0 ||
+    rate<=0
+  ){
+    result.textContent="Please enter a valid amount and exchange rate.";
+    return;
+  }
+
+  const converted=amount*rate;
+
+  result.textContent=
+    amount.toLocaleString(undefined,{
+      maximumFractionDigits:2
+    })+
+    " "+from+
+    " = "+
+    converted.toLocaleString(undefined,{
+      minimumFractionDigits:2,
+      maximumFractionDigits:4
+    })+
+    " "+to;
+}
+
+</script>
+
+</body>
+</html>
