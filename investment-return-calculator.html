@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Investment Return Calculator | Calculate All Things</title>
+
+<meta name="description" content="Free investment return calculator. Calculate investment gain or loss, total return percentage, and annualized return.">
+
+<link rel="canonical" href="https://calculateallthings.com/investment-return-calculator.html">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7508705890035481"
+crossorigin="anonymous"></script>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  max-width:900px;
+  margin:auto;
+  padding:25px;
+  line-height:1.6;
+  color:#222;
+}
+header{
+  padding:20px 0;
+  border-bottom:1px solid #ddd;
+}
+nav a{
+  margin-right:15px;
+}
+.calculator{
+  background:#f5f7fa;
+  padding:25px;
+  border-radius:12px;
+  margin:30px 0;
+}
+label{
+  display:block;
+  margin-top:15px;
+  font-weight:bold;
+}
+input{
+  width:100%;
+  box-sizing:border-box;
+  padding:12px;
+  margin-top:5px;
+}
+button{
+  margin-top:20px;
+  padding:12px 20px;
+  font-size:16px;
+  cursor:pointer;
+}
+#result{
+  margin-top:20px;
+  font-size:19px;
+  font-weight:bold;
+}
+footer{
+  margin-top:40px;
+  padding-top:20px;
+  border-top:1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>Investment Return Calculator</h1>
+
+<nav>
+<a href="/">Home</a>
+<a href="/#stocks-investing">Stocks & Investing</a>
+<a href="/compound-interest-calculator.html">Compound Interest</a>
+<a href="/savings-calculator.html">Savings</a>
+<a href="/#about">About</a>
+</nav>
+
+</header>
+
+<main>
+
+<p>
+Use this free investment return calculator to estimate your investment
+gain or loss, total percentage return, and annualized return.
+</p>
+
+<div class="calculator">
+
+<label for="initial">Initial Investment ($)</label>
+<input id="initial" type="number" min="0.01" step="0.01" value="10000">
+
+<label for="final">Final Investment Value ($)</label>
+<input id="final" type="number" min="0" step="0.01" value="15000">
+
+<label for="years">Investment Period (Years)</label>
+<input id="years" type="number" min="0.01" step="0.01" value="5">
+
+<button onclick="calculateReturn()">Calculate Return</button>
+
+<div id="result"></div>
+
+</div>
+
+<h2>How Investment Return Is Calculated</h2>
+
+<p>
+Investment return measures how much an investment has gained or lost
+compared with the amount originally invested.
+</p>
+
+<h2>Total Return Formula</h2>
+
+<p>
+<strong>
+Total Return (%) =
+(Final Value − Initial Investment) ÷ Initial Investment × 100
+</strong>
+</p>
+
+<h2>Annualized Return</h2>
+
+<p>
+Annualized return estimates the average compounded rate of return per
+year over the investment period.
+</p>
+
+<p>
+<strong>
+Annualized Return =
+(Final Value ÷ Initial Investment)<sup>1 / Years</sup> − 1
+</strong>
+</p>
+
+<h2>Example</h2>
+
+<p>
+If an investment grows from $10,000 to $15,000, the investment has
+gained $5,000. The total return is 50%. If that growth occurred over
+five years, the annualized return is lower than 50% because the return
+is spread across the entire five-year period.
+</p>
+
+<h2>Understanding Investment Returns</h2>
+
+<p>
+Investment returns can be positive or negative. A positive return means
+the ending value is greater than the initial investment, while a
+negative return represents a loss.
+</p>
+
+<h2>Important Limitations</h2>
+
+<p>
+This simple calculator does not account for additional deposits,
+withdrawals, dividends taken as cash, taxes, investment fees, inflation,
+or the timing of cash flows. Those factors can affect actual investment
+performance.
+</p>
+
+<h2>Related Calculators</h2>
+
+<p>
+<a href="/compound-interest-calculator.html">Compound Interest Calculator</a> |
+<a href="/savings-calculator.html">Savings Calculator</a> |
+<a href="/percentage-calculator.html">Percentage Calculator</a> |
+<a href="/">Browse all 200 calculators</a>
+</p>
+
+</main>
+
+<footer>
+
+<p>© 2026 Calculate All Things</p>
+
+<p>
+This calculator is provided for general informational and educational
+purposes only and does not constitute financial or investment advice.
+Past performance does not guarantee future results.
+</p>
+
+</footer>
+
+<script>
+
+function money(value){
+  return value.toLocaleString(undefined,{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function calculateReturn(){
+
+  const initial=parseFloat(document.getElementById("initial").value);
+  const finalValue=parseFloat(document.getElementById("final").value);
+  const years=parseFloat(document.getElementById("years").value);
+  const result=document.getElementById("result");
+
+  if(
+    !Number.isFinite(initial) ||
+    !Number.isFinite(finalValue) ||
+    !Number.isFinite(years) ||
+    initial<=0 ||
+    finalValue<0 ||
+    years<=0
+  ){
+    result.textContent="Please enter valid investment information.";
+    return;
+  }
+
+  const gain=finalValue-initial;
+  const totalReturn=(gain/initial)*100;
+
+  let annualized;
+
+  if(finalValue===0){
+    annualized=-100;
+  }else{
+    annualized=
+      (Math.pow(finalValue/initial,1/years)-1)*100;
+  }
+
+  const gainLabel=gain>=0 ? "Investment gain" : "Investment loss";
+
+  result.innerHTML=
+    gainLabel+": $"+money(Math.abs(gain))+
+    "<br>Total return: "+totalReturn.toFixed(2)+"%"+
+    "<br>Annualized return: "+annualized.toFixed(2)+"%";
+}
+
+</script>
+
+</body>
+</html>
