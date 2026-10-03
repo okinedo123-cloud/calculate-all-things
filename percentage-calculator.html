@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Percentage Calculator | Calculate All Things</title>
+<meta name="description" content="Free percentage calculator. Find what percent one number is of another, calculate a percentage of a number, and calculate percentage increase or decrease.">
+<link rel="canonical" href="https://calculateallthings.com/percentage-calculator.html">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7508705890035481"
+crossorigin="anonymous"></script>
+
+<style>
+body{font-family:Arial,sans-serif;max-width:900px;margin:auto;padding:25px;line-height:1.6;color:#222}
+header{padding:20px 0;border-bottom:1px solid #ddd}
+nav a{margin-right:15px}
+.calculator{background:#f5f7fa;padding:25px;border-radius:12px;margin:30px 0}
+label{display:block;margin-top:15px;font-weight:bold}
+input{width:100%;box-sizing:border-box;padding:12px;margin-top:5px}
+button{margin-top:15px;padding:12px 20px;font-size:16px;cursor:pointer}
+.result{margin-top:15px;font-size:19px;font-weight:bold}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid #ddd}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Percentage Calculator</h1>
+<nav>
+<a href="/">Home</a>
+<a href="/#math">Math</a>
+<a href="/#about">About</a>
+<a href="/#privacy">Privacy</a>
+</nav>
+</header>
+
+<main>
+
+<p>Use this free percentage calculator for three common calculations: finding a percentage of a number, determining what percentage one number is of another, and calculating percentage change.</p>
+
+<div class="calculator">
+
+<h2>What is X% of Y?</h2>
+
+<label for="percent">Percentage (%)</label>
+<input id="percent" type="number" step="any" value="20">
+
+<label for="number">Number</label>
+<input id="number" type="number" step="any" value="150">
+
+<button onclick="percentageOf()">Calculate</button>
+
+<div id="result1" class="result"></div>
+
+<hr>
+
+<h2>X is what percent of Y?</h2>
+
+<label for="part">X</label>
+<input id="part" type="number" step="any" value="30">
+
+<label for="whole">Y</label>
+<input id="whole" type="number" step="any" value="150">
+
+<button onclick="whatPercent()">Calculate</button>
+
+<div id="result2" class="result"></div>
+
+<hr>
+
+<h2>Percentage Increase or Decrease</h2>
+
+<label for="oldValue">Original Value</label>
+<input id="oldValue" type="number" step="any" value="100">
+
+<label for="newValue">New Value</label>
+<input id="newValue" type="number" step="any" value="125">
+
+<button onclick="percentageChange()">Calculate Change</button>
+
+<div id="result3" class="result"></div>
+
+</div>
+
+<h2>How Percentages Work</h2>
+
+<p>A percentage represents a number as a fraction of 100. For example, 25% means 25 out of every 100, which is equivalent to 0.25.</p>
+
+<h2>Percentage Formulas</h2>
+
+<p><strong>Percentage of a number:</strong> (percentage ÷ 100) × number</p>
+
+<p><strong>What percent one number is of another:</strong> (part ÷ whole) × 100</p>
+
+<p><strong>Percentage change:</strong> ((new value − original value) ÷ |original value|) × 100</p>
+
+<h2>Examples</h2>
+
+<p>20% of 150 is 30. If 30 is compared with 150, then 30 is 20% of 150. If a value increases from 100 to 125, the percentage increase is 25%.</p>
+
+<h2>Common Uses</h2>
+
+<p>Percentage calculations are commonly used for discounts, taxes, tips, grades, financial changes, business metrics, statistics and everyday comparisons.</p>
+
+<h2>Related Calculators</h2>
+
+<p><a href="/">Browse all 200 calculators on Calculate All Things</a>.</p>
+
+</main>
+
+<footer>
+<p>© 2026 Calculate All Things</p>
+<p>Calculator results are provided for general informational and educational purposes.</p>
+</footer>
+
+<script>
+function getNumber(id){
+ return parseFloat(document.getElementById(id).value);
+}
+
+function percentageOf(){
+ const p=getNumber("percent");
+ const n=getNumber("number");
+ const result=document.getElementById("result1");
+
+ if(!Number.isFinite(p)||!Number.isFinite(n)){
+   result.textContent="Please enter valid numbers.";
+   return;
+ }
+
+ const answer=(p/100)*n;
+ result.textContent=p+"% of "+n+" = "+Number(answer.toFixed(10));
+}
+
+function whatPercent(){
+ const part=getNumber("part");
+ const whole=getNumber("whole");
+ const result=document.getElementById("result2");
+
+ if(!Number.isFinite(part)||!Number.isFinite(whole)||whole===0){
+   result.textContent="Please enter valid numbers. Y cannot be zero.";
+   return;
+ }
+
+ const answer=(part/whole)*100;
+ result.textContent=part+" is "+Number(answer.toFixed(4))+"% of "+whole;
+}
+
+function percentageChange(){
+ const oldValue=getNumber("oldValue");
+ const newValue=getNumber("newValue");
+ const result=document.getElementById("result3");
+
+ if(!Number.isFinite(oldValue)||!Number.isFinite(newValue)||oldValue===0){
+   result.textContent="Please enter valid numbers. The original value cannot be zero.";
+   return;
+ }
+
+ const change=((newValue-oldValue)/Math.abs(oldValue))*100;
+ const direction=change>0 ? "increase" : change<0 ? "decrease" : "change";
+
+ result.textContent=
+   change===0
+   ? "Percentage change: 0%"
+   : "Percentage "+direction+": "+Math.abs(change).toFixed(2)+"%";
+}
+</script>
+
+</body>
+</html>
