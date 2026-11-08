@@ -1,336 +1,286 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>Currency Converter | Calculate All Things</title>
-
-<meta name="description" content="Free currency converter. Convert amounts between major world currencies using an exchange rate you enter.">
-
-<link rel="canonical" href="https://calculateallthings.com/currency-converter.html">
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7508705890035481"
-crossorigin="anonymous"></script>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Currency Converter | Calculate All Things</title>
+<meta name="description" content="Convert between world currencies using automatically updated exchange rates. Free currency converter with searchable currencies and manual rate option.">
 <style>
-body{
-  font-family:Arial,sans-serif;
-  max-width:900px;
-  margin:auto;
-  padding:25px;
-  line-height:1.6;
-  color:#222;
-}
-header{
-  padding:20px 0;
-  border-bottom:1px solid #ddd;
-}
-nav a{
-  margin-right:15px;
-}
-.calculator{
-  background:#f5f7fa;
-  padding:25px;
-  border-radius:12px;
-  margin:30px 0;
-}
-label{
-  display:block;
-  margin-top:15px;
-  font-weight:bold;
-}
-input,select{
-  width:100%;
-  box-sizing:border-box;
-  padding:12px;
-  margin-top:5px;
-}
-button{
-  margin-top:20px;
-  padding:12px 20px;
-  font-size:16px;
-  cursor:pointer;
-}
-#result{
-  margin-top:20px;
-  font-size:19px;
-  font-weight:bold;
-}
-.note{
-  background:#fff8dc;
-  padding:15px;
-  border-radius:8px;
-  margin-top:20px;
-}
-footer{
-  margin-top:40px;
-  padding-top:20px;
-  border-top:1px solid #ddd;
-}
+:root{font-family:Arial,sans-serif;color:#193047;background:#f3f7fb}
+*{box-sizing:border-box}
+body{margin:0}
+header{background:#123c69;color:white;padding:24px;text-align:center}
+header h1{margin:0 0 8px}
+nav{background:#fff;padding:14px;text-align:center;border-bottom:1px solid #ddd}
+nav a{margin:0 12px;color:#145b9b;text-decoration:none}
+main{max-width:850px;margin:30px auto;padding:0 15px}
+.card{background:white;border-radius:14px;padding:25px;margin-bottom:22px;box-shadow:0 3px 15px #123c6915}
+h2{color:#123c69}
+label{display:block;font-weight:bold;margin:15px 0 6px}
+input,select,button{font:inherit}
+input,select{width:100%;padding:12px;border:1px solid #aebfcd;border-radius:8px;background:white}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+button{border:0;border-radius:8px;padding:12px 18px;cursor:pointer;background:#1463a5;color:white}
+button:hover{background:#0b477b}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.result{background:#eaf5ff;padding:20px;border-radius:10px;margin-top:20px;overflow-wrap:anywhere}
+.amount{font-size:clamp(24px,5vw,36px);font-weight:bold;color:#075b9e}
+small,.muted{color:#526779}
+#status{margin-top:12px}
+footer{text-align:center;padding:30px;color:#526779}
+@media(max-width:550px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
-
 <body>
-
 <header>
-
-<h1>Currency Converter</h1>
-
-<nav>
-<a href="/">Home</a>
-<a href="/#currency-exchange">Currency & Exchange</a>
-<a href="/percentage-calculator.html">Percentage Calculator</a>
-<a href="/#about">About</a>
-</nav>
-
+<h1>Calculate All Things</h1>
+<p>Free Currency Converter</p>
 </header>
-
+<nav>
+<a href="index.html">Home</a>
+<a href="index.html#currency-exchange">Currency &amp; Exchange</a>
+<a href="index.html#about">About</a>
+</nav>
 <main>
-
-<p>
-Use this free currency converter to convert an amount from one currency
-to another using the exchange rate you enter.
-</p>
-
-<div class="calculator">
+<section class="card">
+<h2>Currency Converter</h2>
+<p>Convert between world currencies using automatically updated exchange rates. Search by currency code or name.</p>
 
 <label for="amount">Amount</label>
-<input id="amount" type="number" min="0" step="0.01" value="100">
+<input id="amount" type="number" value="100" min="0" step="any">
 
-<label for="fromCurrency">From Currency</label>
-<select id="fromCurrency">
-<option value="USD">USD — US Dollar</option>
-<option value="EUR">EUR — Euro</option>
-<option value="GBP">GBP — British Pound</option>
-<option value="CAD">CAD — Canadian Dollar</option>
-<option value="AUD">AUD — Australian Dollar</option>
-<option value="JPY">JPY — Japanese Yen</option>
-<option value="CHF">CHF — Swiss Franc</option>
-<option value="CNY">CNY — Chinese Yuan</option>
-<option value="INR">INR — Indian Rupee</option>
-<option value="NGN">NGN — Nigerian Naira</option>
-<option value="ZAR">ZAR — South African Rand</option>
-<option value="MXN">MXN — Mexican Peso</option>
-<option value="BRL">BRL — Brazilian Real</option>
-</select>
-
-<label for="toCurrency">To Currency</label>
-<select id="toCurrency">
-<option value="EUR">EUR — Euro</option>
-<option value="USD">USD — US Dollar</option>
-<option value="GBP">GBP — British Pound</option>
-<option value="CAD">CAD — Canadian Dollar</option>
-<option value="AUD">AUD — Australian Dollar</option>
-<option value="JPY">JPY — Japanese Yen</option>
-<option value="CHF">CHF — Swiss Franc</option>
-<option value="CNY">CNY — Chinese Yuan</option>
-<option value="INR">INR — Indian Rupee</option>
-<option value="NGN">NGN — Nigerian Naira</option>
-<option value="ZAR">ZAR — South African Rand</option>
-<option value="MXN">MXN — Mexican Peso</option>
-<option value="BRL">BRL — Brazilian Real</option>
-</select>
-
-<label for="rate">Exchange Rate</label>
-<input id="rate" type="number" min="0.000001" step="any" value="1">
-
-<p>
-Enter how many units of the <strong>To Currency</strong> equal
-1 unit of the <strong>From Currency</strong>.
-</p>
-
-<button onclick="convertCurrency()">Convert Currency</button>
-
-<div id="result"></div>
-
-<div class="note">
-<strong>Important:</strong> This calculator does not automatically retrieve
-live exchange rates. Enter the current exchange rate you want to use.
+<div class="grid">
+<div>
+<label for="fromSearch">From Currency — Search</label>
+<input id="fromSearch" placeholder="Search USD, dollar...">
+<select id="from" size="5" aria-label="From currency"></select>
+</div>
+<div>
+<label for="toSearch">To Currency — Search</label>
+<input id="toSearch" placeholder="Search EUR, euro...">
+<select id="to" size="5" aria-label="To currency"></select>
+</div>
 </div>
 
+<div class="actions">
+<button id="swap" type="button">⇄ Swap Currencies</button>
+<button id="convert" type="button">Convert Currency</button>
 </div>
 
-<h2>How Currency Conversion Works</h2>
+<div id="status" role="status" aria-live="polite">Loading currencies...</div>
 
-<p>
-Currency conversion compares the value of one currency with another.
-Exchange rates change over time because of financial markets, monetary
-policy, economic conditions, and other factors.
-</p>
+<div class="result" aria-live="polite">
+<div id="converted" class="amount">—</div>
+<p id="rateInfo">Exchange rate loading...</p>
+<small id="updated"></small>
+</div>
 
-<h2>Currency Conversion Formula</h2>
+<label>
+<input id="manualToggle" type="checkbox" style="width:auto">
+ Use a manual exchange rate
+</label>
+<div id="manualArea" hidden>
+<label for="manualRate">Rate: 1 From Currency equals how many To Currency units?</label>
+<input id="manualRate" type="number" min="0" step="any" placeholder="Example: 0.90">
+</div>
+</section>
 
-<p>
-<strong>Converted Amount = Original Amount × Exchange Rate</strong>
-</p>
+<section class="card">
+<h2>How the Currency Converter Works</h2>
+<p>The converter multiplies the amount entered by the exchange rate for the selected currency pair. For example, if 1 USD equals 0.90 EUR, then 100 USD equals 90 EUR.</p>
 
-<p>
-For example, if 1 US dollar equals 0.90 euros, converting $100 at an
-exchange rate of 0.90 produces €90.
-</p>
+<h3>Are Exchange Rates Live?</h3>
+<p>Rates are retrieved automatically from an external currency data service that is updated daily. They are reference rates, not guaranteed transaction prices or continuously streaming market quotes.</p>
 
-<h2>Why Your Actual Exchange May Be Different</h2>
+<h3>Why Might Bank Rates Differ?</h3>
+<p>Banks, credit card companies and money transfer services may add exchange-rate margins, commissions or transaction fees. The actual amount received may therefore differ from this estimate.</p>
 
-<p>
-Banks, credit card companies, currency exchanges, and other financial
-services may use different exchange rates and may charge transaction,
-conversion, or service fees. Therefore, the amount you actually receive
-may differ from this calculator's estimate.
-</p>
+<h3>Frequently Asked Questions</h3>
+<h4>Can I convert Nigerian naira?</h4>
+<p>Yes, NGN is included when available from the exchange-rate provider, along with major currencies such as USD, EUR, GBP, CAD, INR and JPY.</p>
 
-<h2>Common Uses</h2>
+<h4>Can I enter my own exchange rate?</h4>
+<p>Yes. Enable the manual exchange-rate option to calculate using a rate from your bank or another source.</p>
 
-<p>
-A currency converter can be useful when planning international travel,
-comparing overseas purchases, estimating business expenses, reviewing
-international transactions, or converting prices between currencies.
-</p>
-
-<h2>Related Calculators</h2>
-
-<p>
-<a href="/percentage-calculator.html">Percentage Calculator</a> |
-<a href="/savings-calculator.html">Savings Calculator</a> |
-<a href="/compound-interest-calculator.html">Compound Interest Calculator</a> |
-<a href="/">Browse all 200 calculators</a>
-</p>
-
+<h4>Is this suitable for financial transactions?</h4>
+<p>This calculator is intended for general informational and educational purposes. Confirm actual rates and fees with your financial provider before making transactions.</p>
+</section>
 </main>
-
-<footer>
-
-<p>© 2026 Calculate All Things</p>
-
-<p>
-This calculator is provided for general informational purposes.
-Exchange rates fluctuate, and results should not be considered a quote
-or guarantee of the rate available from a financial institution.
-</p>
-
-</footer>
+<footer>© 2026 Calculate All Things. All rights reserved.</footer>
 
 <script>
+"use strict";
 
-function convertCurrency(){
+const API = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1";
+const BACKUP = "https://latest.currency-api.pages.dev/v1";
+const el = id => document.getElementById(id);
 
-  const amount=parseFloat(document.getElementById("amount").value);
-  const rate=parseFloat(document.getElementById("rate").value);
+let currencies = {};
+let cachedRates = {};
+let selectedFrom = "usd";
+let selectedTo = "eur";
+let requestId = 0;
 
-  const from=document.getElementById("fromCurrency").value;
-  const to=document.getElementById("toCurrency").value;
+async function getJSON(path) {
+  for (const base of [API, BACKUP]) {
+    try {
+      const response = await fetch(base + path, {cache:"no-cache"});
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      return await response.json();
+    } catch (error) {
+      console.warn("Currency source unavailable:", error);
+    }
+  }
+  throw new Error("Currency data is temporarily unavailable.");
+}
 
-  const result=document.getElementById("result");
+function renderOptions(which) {
+  const select = el(which);
+  const search = el(which + "Search").value.trim().toLowerCase();
+  const selected = which === "from" ? selectedFrom : selectedTo;
 
-  if(
-    !Number.isFinite(amount) ||
-    !Number.isFinite(rate) ||
-    amount<0 ||
-    rate<=0
-  ){
-    result.textContent="Please enter a valid amount and exchange rate.";
+  select.replaceChildren();
+  const matches = Object.entries(currencies)
+    .filter(([code,name]) =>
+      code.includes(search) || name.toLowerCase().includes(search))
+    .sort((a,b) => a[0].localeCompare(b[0]));
+
+  for (const [code,name] of matches) {
+    const option = document.createElement("option");
+    option.value = code;
+    option.textContent = code.toUpperCase() + " — " + name;
+    option.selected = code === selected;
+    select.appendChild(option);
+  }
+}
+
+async function loadCurrencies() {
+  try {
+    currencies = await getJSON("/currencies.json");
+    currencies = Object.fromEntries(
+      Object.entries(currencies)
+        .filter(([code,name]) =>
+          /^[a-z]{3}$/.test(code) && typeof name === "string")
+    );
+
+    if (!currencies.usd || !currencies.eur) {
+      throw new Error("Required currencies are missing.");
+    }
+
+    renderOptions("from");
+    renderOptions("to");
+    await convert();
+  } catch (error) {
+    el("status").textContent =
+      "Unable to load currency list. Please refresh and try again.";
+  }
+}
+
+async function convert() {
+  const currentRequest = ++requestId;
+  const amount = Number(el("amount").value);
+  const manual = el("manualToggle").checked;
+
+  if (el("amount").value.trim() === "" ||
+      !Number.isFinite(amount) || amount < 0) {
+    el("status").textContent = "Enter a valid nonnegative amount.";
+    el("converted").textContent = "—";
     return;
   }
 
-  const converted=amount*rate;
+  let rate, dateLabel;
 
-  result.textContent=
-    amount.toLocaleString(undefined,{
-      maximumFractionDigits:2
-    })+
-    " "+from+
-    " = "+
-    converted.toLocaleString(undefined,{
-      minimumFractionDigits:2,
-      maximumFractionDigits:4
-    })+
-    " "+to;
+  try {
+    if (manual) {
+      rate = Number(el("manualRate").value);
+      if (el("manualRate").value.trim() === "" ||
+          !Number.isFinite(rate) || rate <= 0) {
+        throw new Error("Enter a manual rate greater than zero.");
+      }
+      dateLabel = "Manual exchange rate entered by user";
+    } else if (selectedFrom === selectedTo) {
+      rate = 1;
+      dateLabel = "Same currency";
+    } else {
+      el("status").textContent = "Retrieving exchange rate...";
+      if (!cachedRates[selectedFrom]) {
+        cachedRates[selectedFrom] = await getJSON(
+          "/currencies/" + selectedFrom + ".json"
+        );
+      }
+      if (currentRequest !== requestId) return;
+      const data = cachedRates[selectedFrom];
+      rate = Number(data[selectedFrom]?.[selectedTo]);
+      if (!Number.isFinite(rate) || rate <= 0) {
+        throw new Error("Rate unavailable for this currency pair.");
+      }
+      dateLabel = "Rate date: " + (data.date || "Not provided");
+    }
+
+    if (currentRequest !== requestId) return;
+
+    const result = amount * rate;
+    const formatted = new Intl.NumberFormat("en-US",{
+      maximumFractionDigits: 6
+    }).format(result);
+
+    el("converted").textContent =
+      formatted + " " + selectedTo.toUpperCase();
+
+    el("rateInfo").textContent =
+      "1 " + selectedFrom.toUpperCase() +
+      " = " + rate.toPrecision(8).replace(/\.?0+$/,"") +
+      " " + selectedTo.toUpperCase();
+
+    el("updated").textContent = dateLabel;
+    el("status").textContent = manual
+      ? "Calculated using your manual rate."
+      : "Conversion completed using automatically retrieved reference rates.";
+  } catch (error) {
+    if (currentRequest !== requestId) return;
+    el("status").textContent = error.message;
+    el("converted").textContent = "—";
+    el("rateInfo").textContent =
+      "You can enable manual exchange rate mode below.";
+    el("updated").textContent = "";
+  }
 }
 
+for (const which of ["from","to"]) {
+  el(which + "Search").addEventListener("input",() => {
+    renderOptions(which);
+  });
+
+  el(which).addEventListener("change",() => {
+    const value = el(which).value;
+    if (!value) return;
+    if (which === "from") selectedFrom = value;
+    else selectedTo = value;
+    convert();
+  });
+}
+
+el("swap").addEventListener("click",() => {
+  [selectedFrom,selectedTo] = [selectedTo,selectedFrom];
+  el("fromSearch").value = "";
+  el("toSearch").value = "";
+  renderOptions("from");
+  renderOptions("to");
+  convert();
+});
+
+el("convert").addEventListener("click",convert);
+el("amount").addEventListener("input",convert);
+el("manualRate").addEventListener("input",() => {
+  if (el("manualToggle").checked) convert();
+});
+el("manualToggle").addEventListener("change",() => {
+  el("manualArea").hidden = !el("manualToggle").checked;
+  convert();
+});
+
+loadCurrencies();
 </script>
-
-<section style="max-width:850px;margin:40px auto;padding:20px;line-height:1.7">
-  <h2>Understanding Currency Conversion</h2>
-  <p>
-    Currency conversion is the process of exchanging
-    one currency for another using an exchange rate.
-    Exchange rates help travelers, businesses, and
-    individuals estimate the value of money in
-    different countries.
-  </p>
-
-  <h3>How Is Currency Conversion Calculated?</h3>
-  <p>
-    Converted Amount = Original Amount × Exchange Rate.
-    The exchange rate must represent the amount of
-    target currency received for one unit of the
-    original currency.
-  </p>
-
-  <h3>Worked Currency Conversion Example</h3>
-  <p>
-    Suppose an illustrative exchange rate is
-    1 US dollar = 0.90 euros.
-    Converting $500 gives:
-    500 × 0.90 = 450 euros.
-    This is an example rate, not a live quotation.
-  </p>
-
-  <h3>Why Do Exchange Rates Change?</h3>
-  <p>
-    Exchange rates can fluctuate because of
-    interest rates, inflation, economic conditions,
-    monetary policy, and currency market demand.
-  </p>
-
-  <h3>Mid-Market Rates vs. Bank Rates</h3>
-  <p>
-    The mid-market rate is generally the midpoint
-    between market buying and selling quotations.
-    Banks and currency exchange services may
-    apply spreads, commissions, or transaction fees.
-    The amount received may therefore differ
-    from a calculator estimate.
-  </p>
-
-  <h3>Frequently Asked Questions</h3>
-
-  <h4>Are currency exchange rates fixed?</h4>
-  <p>
-    Some currencies have fixed or managed exchange
-    rate arrangements, while others fluctuate
-    according to market conditions.
-  </p>
-
-  <h4>Does this calculator provide live rates?</h4>
-  <p>
-    Exchange-rate freshness depends on the data
-    source and update schedule used by the tool.
-    Check the displayed rate and timestamp, if
-    available, before making financial decisions.
-  </p>
-
-  <h4>Why does my bank offer a different rate?</h4>
-  <p>
-    Banks may include exchange-rate spreads
-    and additional fees. The final conversion
-    amount can differ from an indicative rate.
-  </p>
-
-  <h4>How do I convert back to the original currency?</h4>
-  <p>
-    If the original conversion multiplied by a
-    quoted rate, the reverse conversion generally
-    divides by that same rate, assuming no fees
-    or exchange-rate changes.
-  </p>
-
-  <p><small>
-    Currency conversions are estimates only.
-    Verify current rates and fees with your
-    financial institution before transactions.
-  </small></p>
-</section>
-
 </body>
 </html>
