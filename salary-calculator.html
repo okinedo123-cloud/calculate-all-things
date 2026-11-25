@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salary Calculator – Hourly to Annual Pay | Calculate All Things</title>
+<meta name="description" content="Free salary calculator. Convert hourly, daily, weekly, biweekly, monthly and annual pay. Customize working hours and weeks per year.">
+<link rel="canonical" href="https://calculateallthings.com/salary-calculator.html">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7fb;color:#193047;line-height:1.7}
+header{background:#123c69;color:white;text-align:center;padding:25px}
+header h1{margin:0}
+nav{background:white;text-align:center;padding:15px;border-bottom:1px solid #ddd}
+nav a{color:#145b9b;margin:8px;text-decoration:none}
+main{max-width:900px;margin:25px auto;padding:0 15px}
+.card{background:white;border-radius:12px;padding:25px;margin-bottom:22px;box-shadow:0 3px 15px #123c6915}
+h2,h3{color:#123c69}
+label{display:block;font-weight:bold;margin-top:15px}
+input,select{width:100%;padding:12px;border:1px solid #aebfcd;border-radius:7px;font-size:16px}
+button{background:#1463a5;color:white;border:0;border-radius:8px;padding:14px;width:100%;font-size:17px;margin-top:20px;cursor:pointer}
+button:hover{background:#123c69}
+table{width:100%;border-collapse:collapse}
+td,th{padding:12px;text-align:left;border-bottom:1px solid #ddd}
+th{background:#123c69;color:white}
+.result{background:#eaf5ff;padding:18px;margin-top:20px;border-radius:10px}
+footer{text-align:center;padding:25px;color:#526779}
+a{color:#145b9b}
+#error{color:#b00020}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Salary Calculator</h1>
+<p>Calculate All Things</p>
+</header>
+
+<nav>
+<a href="/">Home</a>
+<a href="/#money-finance">Money &amp; Finance</a>
+<a href="/savings-calculator.html">Savings</a>
+<a href="/percentage-calculator.html">Percentage</a>
+<a href="/#about">About</a>
+</nav>
+
+<main>
+
+<section class="card">
+<h2>Convert Your Salary</h2>
+<p>Calculate your equivalent hourly, daily, weekly, biweekly, monthly and annual gross income based on your working schedule.</p>
+
+<label for="pay">Salary or Pay Amount</label>
+<input id="pay" type="number" min="0" step="any" value="25">
+
+<label for="period">Pay Frequency</label>
+<select id="period">
+<option value="hourly">Hourly</option>
+<option value="daily">Daily</option>
+<option value="weekly">Weekly</option>
+<option value="biweekly">Biweekly</option>
+<option value="semimonthly">Semimonthly</option>
+<option value="monthly">Monthly</option>
+<option value="annual">Annual</option>
+</select>
+
+<label for="currency">Currency</label>
+<select id="currency">
+<option value="USD">USD — US Dollar</option>
+<option value="EUR">EUR — Euro</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="CAD">CAD — Canadian Dollar</option>
+<option value="AUD">AUD — Australian Dollar</option>
+<option value="NGN">NGN — Nigerian Naira</option>
+<option value="INR">INR — Indian Rupee</option>
+<option value="JPY">JPY — Japanese Yen</option>
+<option value="ZAR">ZAR — South African Rand</option>
+<option value="CHF">CHF — Swiss Franc</option>
+</select>
+
+<label for="hours">Working Hours per Week</label>
+<input id="hours" type="number" min="0.1" max="168" step="any" value="40">
+
+<label for="days">Working Days per Week</label>
+<input id="days" type="number" min="1" max="7" step="1" value="5">
+
+<label for="weeks">Paid Working Weeks per Year</label>
+<input id="weeks" type="number" min="0.1" max="52" step="any" value="52">
+
+<button type="button" onclick="calculateSalary()">Calculate Salary</button>
+
+<p id="error" role="alert"></p>
+
+<div id="results" class="result" aria-live="polite" hidden>
+<h3>Estimated Gross Income</h3>
+<table>
+<thead>
+<tr><th>Pay Period</th><th>Income</th></tr>
+</thead>
+<tbody>
+<tr><td>Hourly</td><td id="hourly"></td></tr>
+<tr><td>Daily</td><td id="daily"></td></tr>
+<tr><td>Weekly average</td><td id="weekly"></td></tr>
+<tr><td>Biweekly average</td><td id="biweekly"></td></tr>
+<tr><td>Semimonthly average</td><td id="semimonthly"></td></tr>
+<tr><td>Monthly average</td><td id="monthly"></td></tr>
+<tr><td><strong>Annual</strong></td><td id="annual"></td></tr>
+</tbody>
+</table>
+<p>Estimated paid working hours per year: <strong id="annualHours"></strong></p>
+<p><small>These are gross income estimates before taxes and deductions.</small></p>
+</div>
+</section>
+
+<section class="card">
+<h2>How the Salary Calculator Works</h2>
+
+<p>This calculator converts income into equivalent pay periods. It uses your working hours, working days and paid weeks to estimate annual earnings and average income throughout the year.</p>
+
+<h3>Hourly to Annual Salary Formula</h3>
+
+<p><strong>Annual salary = Hourly pay × Hours per week × Paid weeks per year</strong></p>
+
+<p>For example, someone earning $25 per hour and working 40 hours per week for 52 paid weeks earns an estimated annual gross salary of $52,000.</p>
+
+<table>
+<tr><th>Pay Period</th><th>Example Income</th></tr>
+<tr><td>Hourly</td><td>$25.00</td></tr>
+<tr><td>Daily (5-day week)</td><td>$200.00</td></tr>
+<tr><td>Weekly</td><td>$1,000.00</td></tr>
+<tr><td>Biweekly</td><td>$2,000.00</td></tr>
+<tr><td>Semimonthly</td><td>$2,166.67</td></tr>
+<tr><td>Monthly</td><td>$4,333.33</td></tr>
+<tr><td>Annual</td><td>$52,000.00</td></tr>
+</table>
+
+<h3>Annual Salary to Hourly Pay</h3>
+
+<p>Divide your annual salary by your total paid working hours. For example, a $60,000 annual salary divided by 2,080 paid hours equals approximately $28.85 per hour.</p>
+
+<h3>Biweekly vs. Semimonthly Pay</h3>
+
+<p>Biweekly pay normally involves 26 payments per year, while semimonthly pay involves 24 payments per year. These payment schedules produce different paycheck amounts even when annual earnings are identical. Some calendar years may contain an additional biweekly payday.</p>
+
+<h3>Gross Pay vs. Net Pay</h3>
+
+<p>Gross pay is income before deductions. Net pay is the amount received after applicable income taxes, retirement contributions, insurance premiums and other deductions. This calculator estimates gross pay only.</p>
+
+<h3>How Unpaid Leave Affects Income</h3>
+
+<p>An hourly employee earning $25 per hour for 40 hours per week would earn $52,000 over 52 paid weeks. With two unpaid weeks, annual earnings would decrease to $50,000, assuming the same hourly rate and weekly hours.</p>
+
+<h3>Comparing Job Offers</h3>
+
+<p>Salary conversion helps compare hourly and salaried positions. However, compensation also includes benefits, paid leave, overtime, bonuses, retirement contributions and health insurance. Consider these factors alongside gross salary.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>How many working hours are in a year?</h3>
+
+<p>A standard 40-hour workweek over 52 paid weeks equals 2,080 hours. Your actual paid hours may differ.</p>
+
+<h3>Does this calculator include overtime?</h3>
+
+<p>No. It assumes a constant pay rate. Overtime premiums, bonuses and commissions are not automatically included.</p>
+
+<h3>Can part-time workers use this calculator?</h3>
+
+<p>Yes. Enter your actual weekly hours and paid working weeks to estimate your income.</p>
+
+<h3>Why is monthly pay not simply four times weekly pay?</h3>
+
+<p>A year contains approximately 52 weeks but only 12 months. Average monthly income is therefore calculated by dividing annual income by 12 rather than multiplying weekly income by four.</p>
+
+<h3>Does changing the currency convert exchange rates?</h3>
+
+<p>No. The currency selector changes the displayed currency only. Use our <a href="/currency-converter.html">Currency Converter</a> to convert between currencies.</p>
+
+<h2>Related Calculators</h2>
+
+<p>
+<a href="/savings-calculator.html">Savings Calculator</a> |
+<a href="/percentage-calculator.html">Percentage Calculator</a> |
+<a href="/retirement-calculator.html">Retirement Calculator</a> |
+<a href="/compound-interest-calculator.html">Compound Interest Calculator</a> |
+<a href="/">Browse All Calculators</a>
+</p>
+
+<p><small>This calculator provides educational estimates and does not constitute financial, tax or employment advice.</small></p>
+</section>
+
+</main>
+
+<footer>
+<p>© 2026 Calculate All Things</p>
+<a href="/">Home</a>
+</footer>
+
+<script>
+function calculateSalary(){
+  const get = id => document.getElementById(id);
+  const fields = ["pay","hours","days","weeks"];
+  const pay = Number(get("pay").value);
+  const hours = Number(get("hours").value);
+  const days = Number(get("days").value);
+  const weeks = Number(get("weeks").value);
+  const period = get("period").value;
+  const currency = get("currency").value;
+
+  get("error").textContent = "";
+  get("results").hidden = true;
+
+  if(fields.some(id => get(id).value.trim() === "") ||
+     ![pay,hours,days,weeks].every(Number.isFinite) ||
+     pay < 0 || hours <= 0 || hours > 168 ||
+     days < 1 || days > 7 || !Number.isInteger(days) ||
+     hours > days * 24 ||
+     weeks <= 0 || weeks > 52){
+    get("error").textContent =
+      "Please enter a valid pay amount and working schedule.";
+    return;
+  }
+
+  const annualHours = hours * weeks;
+  const annualDays = days * weeks;
+  let annual;
+
+  switch(period){
+    case "hourly":
+      annual = pay * annualHours;
+      break;
+    case "daily":
+      annual = pay * annualDays;
+      break;
+    case "weekly":
+      annual = pay * weeks;
+      break;
+    case "biweekly":
+      annual = pay * 26;
+      break;
+    case "semimonthly":
+      annual = pay * 24;
+      break;
+    case "monthly":
+      annual = pay * 12;
+      break;
+    case "annual":
+      annual = pay;
+      break;
+  }
+
+  if(!Number.isFinite(annual)){
+    get("error").textContent = "Amount is too large.";
+    return;
+  }
+
+  const format = value => new Intl.NumberFormat("en-US",{
+    style:"currency",
+    currency:currency,
+    maximumFractionDigits:2
+  }).format(value);
+
+  get("hourly").textContent = format(annual / annualHours);
+  get("daily").textContent = format(annual / annualDays);
+  get("weekly").textContent = format(annual / 52);
+  get("biweekly").textContent = format(annual / 26);
+  get("semimonthly").textContent = format(annual / 24);
+  get("monthly").textContent = format(annual / 12);
+  get("annual").textContent = format(annual);
+  get("annualHours").textContent =
+    annualHours.toLocaleString("en-US",{
+      maximumFractionDigits:2
+    });
+
+  get("results").hidden = false;
+}
+
+calculateSalary();
+</script>
+
+</body>
+</html>
