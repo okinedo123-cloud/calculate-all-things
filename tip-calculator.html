@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tip Calculator – Calculate Tips and Split Bills | Calculate All Things</title>
+<meta name="description" content="Free tip calculator to calculate gratuity, total restaurant bills and payment per person. Customize tip percentages and split bills easily.">
+<link rel="canonical" href="https://calculateallthings.com/tip-calculator.html">
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7fb;color:#193047;line-height:1.7}
+header{background:#123c69;color:white;text-align:center;padding:25px}
+header h1{margin:0}
+nav{background:white;text-align:center;padding:15px;border-bottom:1px solid #ddd}
+nav a{color:#145b9b;margin:8px;text-decoration:none}
+main{max-width:900px;margin:25px auto;padding:0 15px}
+.card{background:white;border-radius:12px;padding:25px;margin-bottom:22px;box-shadow:0 3px 15px #123c6915}
+h2,h3{color:#123c69}
+label{display:block;font-weight:bold;margin-top:15px}
+input,select{width:100%;padding:12px;border:1px solid #aebfcd;border-radius:7px;font-size:16px}
+button{background:#1463a5;color:white;border:0;border-radius:8px;padding:14px;font-size:17px;cursor:pointer}
+button:hover{background:#123c69}
+.calculate{width:100%;margin-top:20px}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.presets button{flex:1;padding:10px}
+table{width:100%;border-collapse:collapse}
+td,th{padding:12px;text-align:left;border-bottom:1px solid #ddd}
+th{background:#123c69;color:white}
+.result{background:#eaf5ff;padding:18px;margin-top:20px;border-radius:10px}
+footer{text-align:center;padding:25px;color:#526779}
+a{color:#145b9b}
+#error{color:#b00020}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Tip Calculator</h1>
+<p>Calculate All Things</p>
+</header>
+
+<nav>
+<a href="/">Home</a>
+<a href="/percentage-calculator.html">Percentage</a>
+<a href="/salary-calculator.html">Salary</a>
+<a href="/currency-converter.html">Currency</a>
+</nav>
+
+<main>
+
+<section class="card">
+<h2>Calculate Your Tip and Split Your Bill</h2>
+
+<p>Calculate gratuity, determine your total payment and divide the bill equally among friends, family or other members of your group.</p>
+
+<label for="bill">Bill Amount Before Tax</label>
+<input id="bill" type="number" min="0" step="0.01" value="100">
+
+<label for="tax">Tax Amount</label>
+<input id="tax" type="number" min="0" step="0.01" value="0">
+
+<label for="tip">Tip Percentage (%)</label>
+<input id="tip" type="number" min="0" step="any" value="20">
+
+<div class="presets">
+<button type="button" onclick="setTip(10)">10%</button>
+<button type="button" onclick="setTip(15)">15%</button>
+<button type="button" onclick="setTip(18)">18%</button>
+<button type="button" onclick="setTip(20)">20%</button>
+<button type="button" onclick="setTip(25)">25%</button>
+</div>
+
+<label for="basis">Calculate Tip On</label>
+<select id="basis">
+<option value="before">Bill before tax</option>
+<option value="after">Bill including tax</option>
+</select>
+
+<label for="people">Number of People</label>
+<input id="people" type="number" min="1" step="1" value="2">
+
+<label for="currency">Currency</label>
+<select id="currency">
+<option value="USD">USD — US Dollar</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="EUR">EUR — Euro</option>
+<option value="CAD">CAD — Canadian Dollar</option>
+<option value="AUD">AUD — Australian Dollar</option>
+<option value="NGN">NGN — Nigerian Naira</option>
+<option value="INR">INR — Indian Rupee</option>
+<option value="JPY">JPY — Japanese Yen</option>
+<option value="ZAR">ZAR — South African Rand</option>
+<option value="CHF">CHF — Swiss Franc</option>
+</select>
+
+<button class="calculate" type="button" onclick="calculateTip()">Calculate Tip</button>
+
+<p id="error" role="alert"></p>
+
+<div id="results" class="result" aria-live="polite" hidden>
+<h3>Payment Summary</h3>
+
+<table>
+<thead>
+<tr><th>Description</th><th>Amount</th></tr>
+</thead>
+<tbody>
+<tr><td>Original Bill</td><td id="original"></td></tr>
+<tr><td>Tax</td><td id="taxResult"></td></tr>
+<tr><td>Tip Amount</td><td id="tipResult"></td></tr>
+<tr><td><strong>Total Bill</strong></td><td id="total"></td></tr>
+<tr><td>Tip Per Person</td><td id="tipPerson"></td></tr>
+<tr><td><strong>Payment Per Person</strong></td><td id="perPerson"></td></tr>
+</tbody>
+</table>
+
+<p id="splitNote"></p>
+
+<p><small>Individual payments are rounded to the currency's smallest displayed unit. Small rounding differences may occur when splitting a bill.</small></p>
+</div>
+</section>
+
+<section class="card">
+
+<h2>How to Calculate a Tip</h2>
+
+<p>A tip, also known as a gratuity, is an additional payment given for a service. The amount may depend on service quality, local customs, personal preferences and whether a service charge is already included.</p>
+
+<h3>Tip Calculation Formula</h3>
+
+<p><strong>Tip Amount = Eligible Bill Amount × Tip Percentage ÷ 100</strong></p>
+
+<p><strong>Total Payment = Original Bill + Tax + Tip</strong></p>
+
+<p><strong>Payment Per Person = Total Payment ÷ Number of People</strong></p>
+
+<h3>Worked Example</h3>
+
+<p>Four friends share a restaurant bill of $120 before tax. The tax is $10, and they choose to leave a 20% tip calculated on the pre-tax bill.</p>
+
+<table>
+<tr><th>Description</th><th>Amount</th></tr>
+<tr><td>Original bill</td><td>$120.00</td></tr>
+<tr><td>Tax</td><td>$10.00</td></tr>
+<tr><td>20% tip</td><td>$24.00</td></tr>
+<tr><td>Total payment</td><td>$154.00</td></tr>
+<tr><td>Tip per person</td><td>$6.00</td></tr>
+<tr><td>Payment per person</td><td>$38.50</td></tr>
+</table>
+
+<h2>Tip Percentage Reference Table</h2>
+
+<p>The following table illustrates different gratuity amounts before tax. These percentages are examples rather than mandatory tipping recommendations.</p>
+
+<table>
+<tr><th>Bill</th><th>15% Tip</th><th>18% Tip</th><th>20% Tip</th></tr>
+<tr><td>$25</td><td>$3.75</td><td>$4.50</td><td>$5.00</td></tr>
+<tr><td>$50</td><td>$7.50</td><td>$9.00</td><td>$10.00</td></tr>
+<tr><td>$75</td><td>$11.25</td><td>$13.50</td><td>$15.00</td></tr>
+<tr><td>$100</td><td>$15.00</td><td>$18.00</td><td>$20.00</td></tr>
+<tr><td>$150</td><td>$22.50</td><td>$27.00</td><td>$30.00</td></tr>
+<tr><td>$200</td><td>$30.00</td><td>$36.00</td><td>$40.00</td></tr>
+</table>
+
+<h2>Practical Tipping Guide</h2>
+
+<h3>Restaurant Dining</h3>
+<p>In the United States, tips of approximately 15% to 20% are customary in many full-service restaurants. Tipping practices differ by country and establishment.</p>
+
+<h3>Food Delivery</h3>
+<p>When choosing a delivery tip, consider the delivery distance, order size, weather conditions and service provided.</p>
+
+<h3>Hotels and Personal Services</h3>
+<p>Tipping practices for hotel staff, hairdressers, drivers and other service providers vary. Check local expectations before deciding how much to leave.</p>
+
+<h3>Automatic Gratuity and Service Charges</h3>
+<p>Some restaurants automatically add a gratuity or service charge, particularly for larger groups. Review your receipt before adding another tip. A service charge is not necessarily distributed to staff in the same way as a voluntary tip.</p>
+
+<h3>Splitting Bills Fairly</h3>
+<p>Equal bill splitting is convenient when everyone has similar expenses. When individual orders differ significantly, calculate each person's share separately, including their portion of tax and gratuity.</p>
+
+<h3>Calculating Tips Mentally</h3>
+<p>To calculate 10%, move the decimal point one place to the left. Double that amount for a 20% tip. For a 15% tip, add half of the 10% amount to the original 10% amount.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>How much is a 20% tip on $80?</h3>
+<p>A 20% tip on $80 is $16, making the total $96 before any additional tax.</p>
+
+<h3>Should I tip before or after tax?</h3>
+<p>This depends on local customs and personal preference. Our calculator allows either method.</p>
+
+<h3>Can I calculate a custom tip percentage?</h3>
+<p>Yes. Enter any nonnegative percentage in the tip percentage field.</p>
+
+<h3>Can I split a bill without leaving a tip?</h3>
+<p>Yes. Set the tip percentage to zero and enter the number of people sharing the bill.</p>
+
+<h3>What if a service charge is already included?</h3>
+<p>Review your receipt and ask the establishment whether additional gratuity is expected. Include any existing mandatory charges in your bill amount without counting them twice.</p>
+
+<h3>Does the calculator convert currencies?</h3>
+<p>No. The currency selector changes the currency displayed. For exchange rates, use our <a href="/currency-converter.html">Currency Converter</a>.</p>
+
+<h3>Why can individual payments differ by a cent?</h3>
+<p>Some totals cannot be divided equally into whole cents. For example, splitting $100 among three people gives approximately $33.33 each, with one person paying an additional cent to settle the full bill.</p>
+
+<h2>Related Calculators</h2>
+
+<p>
+<a href="/percentage-calculator.html">Percentage Calculator</a> |
+<a href="/salary-calculator.html">Salary Calculator</a> |
+<a href="/currency-converter.html">Currency Converter</a> |
+<a href="/savings-calculator.html">Savings Calculator</a> |
+<a href="/">Browse All Calculators</a>
+</p>
+
+<p><small>This calculator is provided for informational purposes. Tipping customs and service charge requirements vary by location.</small></p>
+
+</section>
+</main>
+
+<footer>
+<p>© 2026 Calculate All Things</p>
+<a href="/">Home</a>
+</footer>
+
+<script>
+const get = id => document.getElementById(id);
+
+function setTip(value){
+  get("tip").value = value;
+  calculateTip();
+}
+
+function calculateTip(){
+
+  const fields = ["bill","tax","tip","people"];
+
+  const bill = Number(get("bill").value);
+  const tax = Number(get("tax").value);
+  const tip = Number(get("tip").value);
+  const people = Number(get("people").value);
+  const basis = get("basis").value;
+  const currency = get("currency").value;
+
+  get("error").textContent = "";
+  get("results").hidden = true;
+
+  if(fields.some(id => get(id).value.trim() === "") ||
+     ![bill,tax,tip,people].every(Number.isFinite) ||
+     bill < 0 || tax < 0 || tip < 0 ||
+     people < 1 || !Number.isSafeInteger(people)){
+
+    get("error").textContent =
+      "Please enter valid amounts and a whole number of people.";
+    return;
+  }
+
+  const formatter = new Intl.NumberFormat("en-US",{
+    style:"currency",
+    currency:currency
+  });
+
+  const digits = formatter.resolvedOptions().maximumFractionDigits;
+  const factor = Math.pow(10,digits);
+
+  const billUnits = Math.round(bill * factor);
+  const taxUnits = Math.round(tax * factor);
+
+  const baseUnits = basis === "after"
+    ? billUnits + taxUnits
+    : billUnits;
+
+  const tipUnits = Math.round(baseUnits * tip / 100);
+  const totalUnits = billUnits + taxUnits + tipUnits;
+
+  if(![billUnits,taxUnits,tipUnits,totalUnits].every(Number.isSafeInteger)){
+    get("error").textContent = "Amount is too large.";
+    return;
+  }
+
+  const format = units => formatter.format(units / factor);
+
+  get("original").textContent = format(billUnits);
+  get("taxResult").textContent = format(taxUnits);
+  get("tipResult").textContent = format(tipUnits);
+  get("total").textContent = format(totalUnits);
+  get("tipPerson").textContent = format(tipUnits / people);
+  get("perPerson").textContent = format(totalUnits / people);
+
+  const lower = Math.floor(totalUnits / people);
+  const remainder = totalUnits % people;
+
+  get("splitNote").textContent = remainder === 0
+    ? "Each person pays " + format(lower) + "."
+    : "Exact split: " + remainder + " person(s) pay " +
+      format(lower + 1) + " and " +
+      (people - remainder) + " person(s) pay " +
+      format(lower) + ".";
+
+  get("results").hidden = false;
+}
+
+calculateTip();
+</script>
+
+</body>
+</html>
