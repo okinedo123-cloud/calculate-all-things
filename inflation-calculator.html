@@ -1,0 +1,485 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inflation Calculator – Future Prices and Purchasing Power | Calculate All Things</title>
+<meta name="description" content="Free inflation calculator. Estimate future prices, purchasing power, cumulative inflation and the effect of inflation on savings and income.">
+<link rel="canonical" href="https://calculateallthings.com/inflation-calculator.html">
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7fb;color:#193047;line-height:1.7}
+header{background:#123c69;color:white;text-align:center;padding:25px}
+header h1{margin:0}
+nav{background:white;text-align:center;padding:15px;border-bottom:1px solid #ddd}
+nav a{color:#145b9b;margin:8px;text-decoration:none}
+main{max-width:900px;margin:25px auto;padding:0 15px}
+.card{background:white;border-radius:12px;padding:25px;margin-bottom:22px;box-shadow:0 3px 15px #123c6915}
+h2,h3{color:#123c69}
+label{display:block;font-weight:bold;margin-top:15px}
+input,select{width:100%;padding:12px;border:1px solid #aebfcd;border-radius:7px;font-size:16px}
+button{background:#1463a5;color:white;border:0;border-radius:8px;padding:14px;font-size:17px;cursor:pointer}
+button:hover{background:#123c69}
+.calculate{width:100%;margin-top:20px}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.presets button{flex:1;padding:10px}
+table{width:100%;border-collapse:collapse}
+td,th{padding:12px;text-align:left;border-bottom:1px solid #ddd}
+th{background:#123c69;color:white}
+.result{background:#eaf5ff;padding:18px;margin-top:20px;border-radius:10px}
+footer{text-align:center;padding:25px;color:#526779}
+a{color:#145b9b}
+#error{color:#b00020}
+.headline{font-size:24px;font-weight:bold;color:#123c69}
+.table-wrap{overflow-x:auto}
+.bar-track{height:24px;background:#dce5ee;border-radius:5px;overflow:hidden}
+.bar{height:100%;background:#1463a5}
+.bar-label{margin:12px 0 5px;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Inflation Calculator</h1>
+<p>Calculate All Things</p>
+</header>
+
+<nav>
+<a href="/">Home</a>
+<a href="/salary-calculator.html">Salary</a>
+<a href="/savings-calculator.html">Savings</a>
+<a href="/retirement-calculator.html">Retirement</a>
+<a href="/compound-interest-calculator.html">Compound Interest</a>
+</nav>
+
+<main>
+
+<section class="card">
+
+<h2>Calculate the Effect of Inflation</h2>
+
+<p>Estimate how rising prices may affect your money over time. Compare future costs, purchasing power and the income needed to maintain your current standard of living.</p>
+
+<label for="amount">Current Amount of Money</label>
+<input id="amount" type="number" min="0" step="0.01" value="10000">
+
+<label for="rate">Estimated Annual Inflation Rate (%)</label>
+<input id="rate" type="number" min="-99" max="100" step="any" value="3">
+
+<div class="presets">
+<button type="button" onclick="setRate(2)">2%</button>
+<button type="button" onclick="setRate(3)">3%</button>
+<button type="button" onclick="setRate(4)">4%</button>
+<button type="button" onclick="setRate(5)">5%</button>
+<button type="button" onclick="setRate(8)">8%</button>
+<button type="button" onclick="setRate(10)">10%</button>
+</div>
+
+<label for="years">Number of Years</label>
+<input id="years" type="number" min="1" max="100" step="1" value="10">
+
+<label for="currency">Currency</label>
+<select id="currency">
+<option value="USD">USD — US Dollar</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="EUR">EUR — Euro</option>
+<option value="CAD">CAD — Canadian Dollar</option>
+<option value="AUD">AUD — Australian Dollar</option>
+<option value="NGN">NGN — Nigerian Naira</option>
+<option value="INR">INR — Indian Rupee</option>
+<option value="JPY">JPY — Japanese Yen</option>
+<option value="ZAR">ZAR — South African Rand</option>
+<option value="CHF">CHF — Swiss Franc</option>
+</select>
+
+<button class="calculate" type="button" onclick="calculateInflation()">Calculate Inflation</button>
+
+<p id="error" role="alert"></p>
+
+<div id="results" class="result" aria-live="polite" hidden>
+
+<h3>Inflation Projection</h3>
+
+<p class="headline" id="headline"></p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Description</th><th>Amount</th></tr>
+</thead>
+<tbody>
+<tr><td>Current Amount</td><td id="current"></td></tr>
+<tr><td>Annual Inflation Rate</td><td id="annualRate"></td></tr>
+<tr><td>Cumulative Price Change</td><td id="cumulative"></td></tr>
+<tr><td>Future Equivalent Cost</td><td id="future"></td></tr>
+<tr><td>Additional Money Needed</td><td id="additional"></td></tr>
+<tr><td>Future Purchasing Power in Today's Money</td><td id="purchasing"></td></tr>
+<tr><td>Purchasing Power Change</td><td id="powerChange"></td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Purchasing Power Comparison</h3>
+
+<div class="bar-label" id="todayLabel"></div>
+<div class="bar-track">
+<div class="bar" id="todayBar"></div>
+</div>
+
+<div class="bar-label" id="futureLabel"></div>
+<div class="bar-track">
+<div class="bar" id="futureBar"></div>
+</div>
+
+<p><small>This projection assumes a constant annual inflation rate. Actual inflation varies over time.</small></p>
+
+<h3>Year-by-Year Inflation Projection</h3>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Equivalent Cost</th>
+<th>Purchasing Power</th>
+</tr>
+</thead>
+<tbody id="yearTable"></tbody>
+</table>
+</div>
+
+</div>
+
+</section>
+
+<section class="card">
+
+<h2>What Is Inflation?</h2>
+
+<p>Inflation is a sustained increase in the general price level of goods and services. When prices rise, the same amount of money generally purchases fewer goods and services than before.</p>
+
+<p>For example, if a basket of groceries costs $100 today and prices increase by 3% over the next year, an equivalent basket would cost approximately $103.</p>
+
+<h2>How to Calculate Inflation</h2>
+
+<p>Inflation compounds over time. Each year's price increase applies to the price level reached during the previous year.</p>
+
+<h3>Future Cost Formula</h3>
+
+<p><strong>Future Cost = Current Cost × (1 + Annual Inflation Rate)<sup>Years</sup></strong></p>
+
+<p>Enter the inflation rate as a decimal when using this formula manually. For example, 3% is represented as 0.03.</p>
+
+<h3>Purchasing Power Formula</h3>
+
+<p><strong>Future Purchasing Power = Current Amount ÷ (1 + Annual Inflation Rate)<sup>Years</sup></strong></p>
+
+<p>This formula estimates the future purchasing power of an unchanged amount of money, expressed in today's prices.</p>
+
+<h3>Cumulative Inflation Formula</h3>
+
+<p><strong>Cumulative Inflation (%) = [(1 + Annual Inflation Rate)<sup>Years</sup> − 1] × 100</strong></p>
+
+<h2>Worked Example: $10,000 Over 10 Years</h2>
+
+<p>Suppose you have $10,000 and annual inflation averages 3% for the next ten years.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Description</th><th>Result</th></tr>
+<tr><td>Current amount</td><td>$10,000.00</td></tr>
+<tr><td>Annual inflation</td><td>3%</td></tr>
+<tr><td>Time period</td><td>10 years</td></tr>
+<tr><td>Cumulative inflation</td><td>34.39%</td></tr>
+<tr><td>Future equivalent cost</td><td>$13,439.16</td></tr>
+<tr><td>Additional money needed</td><td>$3,439.16</td></tr>
+<tr><td>Future purchasing power</td><td>$7,440.94</td></tr>
+<tr><td>Purchasing power reduction</td><td>25.59%</td></tr>
+</table>
+</div>
+
+<p>After ten years, you would need approximately $13,439.16 to purchase what $10,000 buys today. If your money remains unchanged at $10,000, its purchasing power would fall to approximately $7,440.94 in today's money.</p>
+
+<h2>Comparing Different Inflation Rates</h2>
+
+<p>The following table shows the estimated future cost of a purchase that costs $1,000 today, assuming different constant inflation rates.</p>
+
+<div class="table-wrap">
+<table>
+<tr>
+<th>Years</th>
+<th>2% Inflation</th>
+<th>3% Inflation</th>
+<th>5% Inflation</th>
+</tr>
+<tr>
+<td>1</td>
+<td>$1,020.00</td>
+<td>$1,030.00</td>
+<td>$1,050.00</td>
+</tr>
+<tr>
+<td>5</td>
+<td>$1,104.08</td>
+<td>$1,159.27</td>
+<td>$1,276.28</td>
+</tr>
+<tr>
+<td>10</td>
+<td>$1,218.99</td>
+<td>$1,343.92</td>
+<td>$1,628.89</td>
+</tr>
+<tr>
+<td>20</td>
+<td>$1,485.95</td>
+<td>$1,806.11</td>
+<td>$2,653.30</td>
+</tr>
+<tr>
+<td>30</td>
+<td>$1,811.36</td>
+<td>$2,427.26</td>
+<td>$4,321.94</td>
+</tr>
+</table>
+</div>
+
+<h2>Practical Applications of Inflation Calculations</h2>
+
+<h3>Retirement Planning</h3>
+
+<p>Inflation can significantly increase future living expenses. If your current annual living expenses are $40,000, a constant inflation rate of 3% would increase equivalent annual expenses to approximately $72,244 after 20 years.</p>
+
+<p>Use our <a href="/retirement-calculator.html">Retirement Calculator</a> alongside inflation projections when evaluating long-term savings goals.</p>
+
+<h3>Salary and Wage Adjustments</h3>
+
+<p>A salary increase does not necessarily improve purchasing power. If your salary increases by 2% while inflation is 3%, your real purchasing power declines by approximately 0.97%.</p>
+
+<p>Use the <a href="/salary-calculator.html">Salary Calculator</a> to compare your income across different pay periods.</p>
+
+<h3>Inflation and Savings</h3>
+
+<p>Money held in an account that earns less than the inflation rate may lose purchasing power, even if the account balance increases.</p>
+
+<p>For example, a savings account earning 2% annually during a year with 3% inflation produces a negative real return before taxes.</p>
+
+<h3>Nominal Return vs. Real Return</h3>
+
+<p>Nominal return measures the percentage increase in the monetary value of an investment. Real return adjusts that increase for inflation.</p>
+
+<p><strong>Real Return = [(1 + Nominal Return) ÷ (1 + Inflation Rate)] − 1</strong></p>
+
+<p>An investment earning 7% during a year with 3% inflation produces a real return of approximately 3.88%, before taxes and fees.</p>
+
+<h3>Planning Future Purchases</h3>
+
+<p>Inflation estimates can help you plan for future education costs, household expenses, vehicle purchases and other long-term financial goals. However, individual prices may rise faster or slower than general inflation.</p>
+
+<h2>Inflation, Deflation and Disinflation</h2>
+
+<p><strong>Inflation:</strong> The general price level increases.</p>
+
+<p><strong>Deflation:</strong> The general price level decreases. Enter a negative inflation rate to model this scenario.</p>
+
+<p><strong>Disinflation:</strong> Inflation slows, but prices may continue rising. For example, a decline in annual inflation from 6% to 3% does not mean that prices have fallen.</p>
+
+<h2>How Inflation Is Measured</h2>
+
+<p>Consumer price indexes track changes in the prices of selected goods and services over time. In the United States, the Bureau of Labor Statistics publishes the Consumer Price Index, commonly called CPI.</p>
+
+<p>Individual households may experience different inflation rates depending on their spending patterns, housing costs, healthcare expenses and geographic location.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>How much will $1,000 be worth in 10 years?</h3>
+
+<p>At a constant annual inflation rate of 3%, $1,000 would have purchasing power equivalent to approximately $744.09 in today's money after ten years.</p>
+
+<h3>Does 3% annual inflation mean 30% inflation after ten years?</h3>
+
+<p>No. Because inflation compounds, 3% annual inflation over ten years produces approximately 34.39% cumulative inflation.</p>
+
+<h3>Can inflation be negative?</h3>
+
+<p>Yes. Negative inflation is generally called deflation. This calculator supports negative annual inflation rates above minus 100%.</p>
+
+<h3>Does this calculator use current official inflation data?</h3>
+
+<p>No. It uses the annual inflation rate entered by the user to create a hypothetical projection. It does not automatically retrieve historical CPI data or predict future inflation.</p>
+
+<h3>Can I calculate historical inflation?</h3>
+
+<p>For an accurate historical comparison, use official price index values for the starting and ending periods. Divide the ending index by the starting index and multiply by the original amount.</p>
+
+<h3>Does changing currency change the inflation rate?</h3>
+
+<p>No. The currency selector only changes the displayed monetary unit. Enter an inflation assumption appropriate to the economy you are evaluating.</p>
+
+<h2>Official Inflation Resources</h2>
+
+<p>For historical and published inflation information, consult these official sources:</p>
+
+<ul>
+<li><a href="https://www.bls.gov/cpi/" target="_blank" rel="noopener noreferrer">U.S. Bureau of Labor Statistics — Consumer Price Index</a></li>
+<li><a href="https://www.bls.gov/data/inflation_calculator.htm" target="_blank" rel="noopener noreferrer">BLS Historical Inflation Calculator</a></li>
+<li><a href="https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG" target="_blank" rel="noopener noreferrer">World Bank — Consumer Price Inflation</a></li>
+</ul>
+
+<h2>Related Calculators</h2>
+
+<p>
+<a href="/salary-calculator.html">Salary Calculator</a> |
+<a href="/savings-calculator.html">Savings Calculator</a> |
+<a href="/retirement-calculator.html">Retirement Calculator</a> |
+<a href="/compound-interest-calculator.html">Compound Interest Calculator</a> |
+<a href="/investment-return-calculator.html">Investment Return Calculator</a> |
+<a href="/">Browse All Calculators</a>
+</p>
+
+<p><small>This calculator provides hypothetical educational estimates and does not constitute investment or financial advice. Future inflation rates are uncertain.</small></p>
+
+</section>
+
+</main>
+
+<footer>
+<p>© 2026 Calculate All Things</p>
+<a href="/">Home</a>
+</footer>
+
+<script>
+
+const get = id => document.getElementById(id);
+
+function setRate(value){
+  get("rate").value = value;
+  calculateInflation();
+}
+
+function calculateInflation(){
+
+  const amount = Number(get("amount").value);
+  const rate = Number(get("rate").value);
+  const years = Number(get("years").value);
+  const currency = get("currency").value;
+
+  get("error").textContent = "";
+  get("results").hidden = true;
+
+  if(["amount","rate","years"].some(
+       id => get(id).value.trim() === "") ||
+     ![amount,rate,years].every(Number.isFinite) ||
+     amount <= 0 ||
+     rate < -99 || rate > 100 ||
+     years < 1 || years > 100 ||
+     !Number.isInteger(years)){
+
+    get("error").textContent =
+      "Enter a positive amount, an inflation rate between -99% and 100%, and 1 to 100 whole years.";
+    return;
+  }
+
+  const factor = Math.pow(1 + rate / 100, years);
+
+  const future = amount * factor;
+  const purchasing = amount / factor;
+  const additional = future - amount;
+  const cumulative = (factor - 1) * 100;
+  const powerChange = (1 / factor - 1) * 100;
+
+  if(![factor,future,purchasing,additional,
+       cumulative,powerChange].every(Number.isFinite)){
+
+    get("error").textContent =
+      "The selected values produce an amount that is too large.";
+    return;
+  }
+
+  const formatter = new Intl.NumberFormat("en-US",{
+    style:"currency",
+    currency:currency
+  });
+
+  const format = value => formatter.format(value);
+
+  const percent = value =>
+    value.toLocaleString("en-US",{
+      maximumFractionDigits:2
+    }) + "%";
+
+  get("current").textContent = format(amount);
+
+  get("annualRate").textContent = percent(rate);
+
+  get("cumulative").textContent = percent(cumulative);
+
+  get("future").textContent = format(future);
+
+  get("additional").textContent = format(additional);
+
+  get("purchasing").textContent = format(purchasing);
+
+  get("powerChange").textContent = percent(powerChange);
+
+  get("headline").textContent =
+    "Equivalent cost after " + years +
+    " year(s): " + format(future);
+
+  const maximum = Math.max(amount,purchasing);
+
+  get("todayLabel").textContent =
+    "Today's purchasing power: " + format(amount);
+
+  get("futureLabel").textContent =
+    "Future purchasing power: " + format(purchasing);
+
+  get("todayBar").style.width =
+    (amount / maximum * 100) + "%";
+
+  get("futureBar").style.width =
+    (purchasing / maximum * 100) + "%";
+
+  const tbody = get("yearTable");
+
+  tbody.replaceChildren();
+
+  for(let year = 0; year <= years; year++){
+
+    const yearlyFactor =
+      Math.pow(1 + rate / 100, year);
+
+    const row = document.createElement("tr");
+
+    const values = [
+      year,
+      format(amount * yearlyFactor),
+      format(amount / yearlyFactor)
+    ];
+
+    values.forEach(value => {
+
+      const cell = document.createElement("td");
+
+      cell.textContent = value;
+
+      row.appendChild(cell);
+
+    });
+
+    tbody.appendChild(row);
+  }
+
+  get("results").hidden = false;
+}
+
+calculateInflation();
+
+</script>
+
+</body>
+</html>
