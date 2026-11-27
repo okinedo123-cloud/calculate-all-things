@@ -1,0 +1,450 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sales Tax Calculator – Calculate Tax and Total Price | Calculate All Things</title>
+<meta name="description" content="Free sales tax calculator. Calculate sales tax, total purchase price, original pre-tax price and effective tax rates.">
+<link rel="canonical" href="https://calculateallthings.com/sales-tax-calculator.html">
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7fb;color:#193047;line-height:1.7}
+header{background:#123c69;color:white;text-align:center;padding:25px}
+header h1{margin:0}
+nav{background:white;text-align:center;padding:15px;border-bottom:1px solid #ddd}
+nav a{color:#145b9b;margin:8px;text-decoration:none}
+main{max-width:900px;margin:25px auto;padding:0 15px}
+.card{background:white;border-radius:12px;padding:25px;margin-bottom:22px;box-shadow:0 3px 15px #123c6915}
+h2,h3{color:#123c69}
+label{display:block;font-weight:bold;margin-top:15px}
+input,select{width:100%;padding:12px;border:1px solid #aebfcd;border-radius:7px;font-size:16px}
+button{background:#1463a5;color:white;border:0;border-radius:8px;padding:14px;font-size:17px;cursor:pointer}
+button:hover{background:#123c69}
+.calculate{width:100%;margin-top:20px}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.presets button{flex:1;padding:10px}
+table{width:100%;border-collapse:collapse}
+td,th{padding:12px;text-align:left;border-bottom:1px solid #ddd}
+th{background:#123c69;color:white}
+.result{background:#eaf5ff;padding:18px;margin-top:20px;border-radius:10px}
+footer{text-align:center;padding:25px;color:#526779}
+a{color:#145b9b}
+#error{color:#b00020}
+.headline{font-size:24px;font-weight:bold;color:#123c69}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Sales Tax Calculator</h1>
+<p>Calculate All Things</p>
+</header>
+
+<nav>
+<a href="/">Home</a>
+<a href="/percentage-calculator.html">Percentage</a>
+<a href="/discount-calculator.html">Discount</a>
+<a href="/tip-calculator.html">Tip</a>
+<a href="/currency-converter.html">Currency</a>
+</nav>
+
+<main>
+
+<section class="card">
+
+<h2>Calculate Sales Tax and Purchase Price</h2>
+
+<p>Calculate the tax on a purchase, determine the final checkout price, or find the original price of an item when tax is already included.</p>
+
+<label for="mode">Calculation Type</label>
+<select id="mode" onchange="changeMode()">
+<option value="add">Add sales tax to original price</option>
+<option value="remove">Remove sales tax from total price</option>
+<option value="rate">Calculate effective tax rate</option>
+</select>
+
+<label id="amountLabel" for="amount">Original Price Before Tax</label>
+<input id="amount" type="number" min="0" step="0.01" value="100">
+
+<div id="rateFields">
+
+<label for="rate">Sales Tax Rate (%)</label>
+<input id="rate" type="number" min="0" max="100" step="any" value="8">
+
+<div class="presets">
+<button type="button" onclick="setRate(4)">4%</button>
+<button type="button" onclick="setRate(5)">5%</button>
+<button type="button" onclick="setRate(6)">6%</button>
+<button type="button" onclick="setRate(7)">7%</button>
+<button type="button" onclick="setRate(8)">8%</button>
+<button type="button" onclick="setRate(10)">10%</button>
+</div>
+
+<label for="local">Additional Local Tax Rate (%)</label>
+<input id="local" type="number" min="0" max="100" step="any" value="0">
+
+<p><small>Enter zero if the main tax rate already includes all applicable local taxes.</small></p>
+
+</div>
+
+<div id="totalField" hidden>
+<label for="knownTotal">Total Price Including Tax</label>
+<input id="knownTotal" type="number" min="0" step="0.01" value="108">
+</div>
+
+<label for="currency">Currency</label>
+<select id="currency">
+<option value="USD">USD — US Dollar</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="EUR">EUR — Euro</option>
+<option value="CAD">CAD — Canadian Dollar</option>
+<option value="AUD">AUD — Australian Dollar</option>
+<option value="NGN">NGN — Nigerian Naira</option>
+<option value="INR">INR — Indian Rupee</option>
+<option value="JPY">JPY — Japanese Yen</option>
+<option value="ZAR">ZAR — South African Rand</option>
+<option value="CHF">CHF — Swiss Franc</option>
+</select>
+
+<button class="calculate" type="button" onclick="calculateTax()">Calculate Sales Tax</button>
+
+<p id="error" role="alert"></p>
+
+<div id="results" class="result" aria-live="polite" hidden>
+
+<h3>Sales Tax Summary</h3>
+
+<p class="headline" id="headline"></p>
+
+<table>
+<thead>
+<tr><th>Description</th><th>Amount</th></tr>
+</thead>
+<tbody>
+<tr><td>Original Price Before Tax</td><td id="original"></td></tr>
+<tr><td>Combined or Effective Tax Rate</td><td id="combined"></td></tr>
+<tr><td>Sales Tax Amount</td><td id="taxAmount"></td></tr>
+<tr><td><strong>Total Price Including Tax</strong></td><td id="total"></td></tr>
+</tbody>
+</table>
+
+<p><small>Results are estimates based on the tax rates entered. Actual tax rules, exemptions and rounding may differ.</small></p>
+
+</div>
+
+</section>
+
+<section class="card">
+
+<h2>What Is Sales Tax?</h2>
+
+<p>Sales tax is a consumption tax imposed on certain purchases of goods and services. Businesses generally collect applicable sales tax from customers and remit it to the appropriate tax authority.</p>
+
+<p>In the United States, sales tax rates may vary by state, county, city, product category and transaction location. Some purchases may qualify for exemptions or reduced tax rates.</p>
+
+<h2>How to Calculate Sales Tax</h2>
+
+<p><strong>Sales Tax = Original Price × Tax Rate ÷ 100</strong></p>
+
+<p><strong>Total Price = Original Price + Sales Tax</strong></p>
+
+<h3>Worked Example: Adding Sales Tax</h3>
+
+<p>Suppose you purchase an appliance for $250 and the applicable sales tax rate is 8%.</p>
+
+<table>
+<tr><th>Description</th><th>Amount</th></tr>
+<tr><td>Original price</td><td>$250.00</td></tr>
+<tr><td>Sales tax rate</td><td>8%</td></tr>
+<tr><td>Sales tax</td><td>$20.00</td></tr>
+<tr><td>Total purchase price</td><td>$270.00</td></tr>
+</table>
+
+<h2>How to Remove Sales Tax From a Total</h2>
+
+<p>When a receipt shows a tax-inclusive price, dividing the total by one plus the tax rate expressed as a decimal gives the estimated original price.</p>
+
+<p><strong>Original Price = Total Price ÷ (1 + Tax Rate ÷ 100)</strong></p>
+
+<p><strong>Sales Tax = Total Price − Original Price</strong></p>
+
+<h3>Worked Example: Reverse Sales Tax</h3>
+
+<p>A purchase costs $108 including an 8% sales tax.</p>
+
+<table>
+<tr><th>Description</th><th>Amount</th></tr>
+<tr><td>Total price</td><td>$108.00</td></tr>
+<tr><td>Tax rate</td><td>8%</td></tr>
+<tr><td>Original price</td><td>$100.00</td></tr>
+<tr><td>Sales tax</td><td>$8.00</td></tr>
+</table>
+
+<p>Simply subtracting 8% from $108 would give $99.36, which is incorrect because the tax was originally calculated on the pre-tax price.</p>
+
+<h2>How to Find an Effective Sales Tax Rate</h2>
+
+<p>When both the original price and the final price are known, you can estimate the effective tax rate.</p>
+
+<p><strong>Effective Tax Rate (%) = (Total Price − Original Price) ÷ Original Price × 100</strong></p>
+
+<p>For example, if a $200 purchase costs $218 after tax, the tax amount is $18 and the effective tax rate is 9%.</p>
+
+<p>This calculation assumes the difference between the two prices consists entirely of tax. Additional fees or charges would affect the result.</p>
+
+<h2>Combined State and Local Sales Tax</h2>
+
+<p>Some jurisdictions impose more than one sales tax. When state and local taxes apply to the same taxable amount, their percentages can generally be added together.</p>
+
+<h3>Example</h3>
+
+<table>
+<tr><th>Tax Component</th><th>Rate</th></tr>
+<tr><td>Illustrative state tax</td><td>4%</td></tr>
+<tr><td>Illustrative local tax</td><td>5%</td></tr>
+<tr><td>Combined rate</td><td>9%</td></tr>
+</table>
+
+<p>A $100 taxable purchase at this illustrative combined rate would cost $109. These rates are examples, not official rates for a specific location.</p>
+
+<h2>Sales Tax Reference Table</h2>
+
+<p>The following examples show the total price of purchases after applying different tax rates.</p>
+
+<table>
+<tr><th>Original Price</th><th>5% Tax</th><th>8% Tax</th><th>10% Tax</th></tr>
+<tr><td>$25</td><td>$26.25</td><td>$27.00</td><td>$27.50</td></tr>
+<tr><td>$50</td><td>$52.50</td><td>$54.00</td><td>$55.00</td></tr>
+<tr><td>$100</td><td>$105.00</td><td>$108.00</td><td>$110.00</td></tr>
+<tr><td>$250</td><td>$262.50</td><td>$270.00</td><td>$275.00</td></tr>
+<tr><td>$500</td><td>$525.00</td><td>$540.00</td><td>$550.00</td></tr>
+<tr><td>$1,000</td><td>$1,050.00</td><td>$1,080.00</td><td>$1,100.00</td></tr>
+</table>
+
+<h2>Practical Applications</h2>
+
+<h3>Planning a Shopping Budget</h3>
+
+<p>If your total budget is $500 and the applicable sales tax rate is 8%, your maximum estimated pre-tax purchase price is $462.96, assuming no other charges. Reverse sales tax calculations help prevent unexpected checkout expenses.</p>
+
+<h3>Comparing Purchases</h3>
+
+<p>Compare the final price of products, including applicable taxes, delivery charges and other fees. A lower advertised price does not necessarily produce a lower total cost.</p>
+
+<h3>Discounts and Sales Tax</h3>
+
+<p>Sales tax is often calculated on the discounted purchase price, although the treatment of coupons and rebates depends on local tax rules. Use our <a href="/discount-calculator.html">Discount Calculator</a> to estimate purchases involving sequential discounts and sales tax.</p>
+
+<h3>Business Invoices</h3>
+
+<p>Businesses can use this calculator to estimate tax on taxable transactions. However, official accounting and invoicing should follow applicable tax laws, including product exemptions, jurisdiction-specific rates and required rounding methods.</p>
+
+<h3>Tax-Inclusive Pricing and VAT</h3>
+
+<p>Many countries display prices that already include value-added tax, commonly called VAT. The reverse-tax formula can estimate the pre-tax amount when a single known VAT rate applies. VAT and retail sales tax differ in their collection systems and legal treatment.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>How much is 8% sales tax on $100?</h3>
+
+<p>The sales tax is $8, making the total purchase price $108.</p>
+
+<h3>How much is 10% sales tax on $250?</h3>
+
+<p>The tax is $25, resulting in a total price of $275.</p>
+
+<h3>Does every purchase include sales tax?</h3>
+
+<p>No. Taxability varies by jurisdiction, product type, customer eligibility and transaction circumstances.</p>
+
+<h3>Does this calculator automatically find my local tax rate?</h3>
+
+<p>No. Enter the applicable tax rate manually. Consult your state or local tax authority for current official rates.</p>
+
+<h3>Can I calculate sales tax on a discounted item?</h3>
+
+<p>Yes. Enter the applicable taxable purchase price after discounts, where permitted by local tax rules.</p>
+
+<h3>Why might my receipt differ from this calculator?</h3>
+
+<p>Retailers may calculate tax separately for each item, apply different tax rates to different products or use jurisdiction-specific rounding rules.</p>
+
+<h3>Does changing the currency convert exchange rates?</h3>
+
+<p>No. The currency selector changes the displayed currency only. Use our <a href="/currency-converter.html">Currency Converter</a> for exchange-rate calculations.</p>
+
+<h2>Official Tax Information</h2>
+
+<p>For official tax rates and requirements, consult the appropriate tax authority. United States users can find state government tax resources through <a href="https://www.irs.gov/businesses/small-businesses-self-employed/state-government-websites" target="_blank" rel="noopener noreferrer">IRS State Government Websites</a>.</p>
+
+<h2>Related Calculators</h2>
+
+<p>
+<a href="/discount-calculator.html">Discount Calculator</a> |
+<a href="/percentage-calculator.html">Percentage Calculator</a> |
+<a href="/tip-calculator.html">Tip Calculator</a> |
+<a href="/salary-calculator.html">Salary Calculator</a> |
+<a href="/currency-converter.html">Currency Converter</a> |
+<a href="/">Browse All Calculators</a>
+</p>
+
+<p><small>This calculator provides educational estimates and does not constitute legal, accounting or tax advice.</small></p>
+
+</section>
+
+</main>
+
+<footer>
+<p>© 2026 Calculate All Things</p>
+<a href="/">Home</a>
+</footer>
+
+<script>
+
+const get = id => document.getElementById(id);
+
+function changeMode(){
+
+  const mode = get("mode").value;
+
+  get("rateFields").hidden = mode === "rate";
+  get("totalField").hidden = mode !== "rate";
+
+  get("amountLabel").textContent =
+    mode === "remove"
+    ? "Total Price Including Tax"
+    : "Original Price Before Tax";
+
+  get("results").hidden = true;
+  get("error").textContent = "";
+}
+
+function setRate(value){
+  get("rate").value = value;
+  calculateTax();
+}
+
+function calculateTax(){
+
+  const mode = get("mode").value;
+  const currency = get("currency").value;
+
+  const amount = Number(get("amount").value);
+  const rate = Number(get("rate").value);
+  const local = Number(get("local").value);
+  const knownTotal = Number(get("knownTotal").value);
+
+  get("error").textContent = "";
+  get("results").hidden = true;
+
+  const fail = message => {
+    get("error").textContent = message;
+  };
+
+  if(get("amount").value.trim() === "" ||
+     !Number.isFinite(amount) || amount < 0){
+    fail("Please enter a valid purchase amount.");
+    return;
+  }
+
+  const formatter = new Intl.NumberFormat("en-US",{
+    style:"currency",
+    currency:currency
+  });
+
+  const digits =
+    formatter.resolvedOptions().maximumFractionDigits;
+
+  const factor = Math.pow(10,digits);
+
+  const units = Math.round(amount * factor);
+
+  let original;
+  let taxAmount;
+  let total;
+  let combined;
+
+  if(mode === "rate"){
+
+    if(get("knownTotal").value.trim() === "" ||
+       !Number.isFinite(knownTotal) ||
+       units <= 0 ||
+       knownTotal < amount){
+
+      fail("Enter a positive original price and a total price equal to or greater than it.");
+      return;
+    }
+
+    original = units;
+    total = Math.round(knownTotal * factor);
+    taxAmount = total - original;
+    combined = taxAmount / original * 100;
+
+  }else{
+
+    if(get("rate").value.trim() === "" ||
+       get("local").value.trim() === "" ||
+       !Number.isFinite(rate) ||
+       !Number.isFinite(local) ||
+       rate < 0 || local < 0 ||
+       rate > 100 || local > 100 ||
+       rate + local > 100){
+
+      fail("Enter valid tax rates with a combined rate between 0% and 100%.");
+      return;
+    }
+
+    combined = rate + local;
+
+    if(mode === "add"){
+
+      original = units;
+      taxAmount = Math.round(original * combined / 100);
+      total = original + taxAmount;
+
+    }else{
+
+      total = units;
+      original = Math.round(total / (1 + combined / 100));
+      taxAmount = total - original;
+
+    }
+  }
+
+  if(![original,taxAmount,total].every(Number.isSafeInteger) ||
+     !Number.isFinite(combined)){
+
+    fail("The entered amount is too large.");
+    return;
+  }
+
+  const format = value =>
+    formatter.format(value / factor);
+
+  get("original").textContent = format(original);
+
+  get("combined").textContent =
+    combined.toLocaleString("en-US",{
+      maximumFractionDigits:4
+    }) + "%";
+
+  get("taxAmount").textContent = format(taxAmount);
+
+  get("total").textContent = format(total);
+
+  get("headline").textContent =
+    "Total purchase price: " + format(total);
+
+  get("results").hidden = false;
+}
+
+changeMode();
+calculateTax();
+
+</script>
+
+</body>
+</html>
