@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discount Calculator – Sale Price and Savings | Calculate All Things</title>
+<meta name="description" content="Free discount calculator. Calculate sale prices, percentage discounts, additional discounts, sales tax and total savings.">
+<link rel="canonical" href="https://calculateallthings.com/discount-calculator.html">
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7fb;color:#193047;line-height:1.7}
+header{background:#123c69;color:white;text-align:center;padding:25px}
+header h1{margin:0}
+nav{background:white;text-align:center;padding:15px;border-bottom:1px solid #ddd}
+nav a{color:#145b9b;margin:8px;text-decoration:none}
+main{max-width:900px;margin:25px auto;padding:0 15px}
+.card{background:white;border-radius:12px;padding:25px;margin-bottom:22px;box-shadow:0 3px 15px #123c6915}
+h2,h3{color:#123c69}
+label{display:block;font-weight:bold;margin-top:15px}
+input,select{width:100%;padding:12px;border:1px solid #aebfcd;border-radius:7px;font-size:16px}
+button{background:#1463a5;color:white;border:0;border-radius:8px;padding:14px;font-size:17px;cursor:pointer}
+button:hover{background:#123c69}
+.calculate{width:100%;margin-top:20px}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.presets button{flex:1;padding:10px}
+table{width:100%;border-collapse:collapse}
+td,th{padding:12px;text-align:left;border-bottom:1px solid #ddd}
+th{background:#123c69;color:white}
+.result{background:#eaf5ff;padding:18px;margin-top:20px;border-radius:10px}
+footer{text-align:center;padding:25px;color:#526779}
+a{color:#145b9b}
+#error{color:#b00020}
+.savings{font-size:24px;font-weight:bold;color:#18743c}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Discount Calculator</h1>
+<p>Calculate All Things</p>
+</header>
+
+<nav>
+<a href="/">Home</a>
+<a href="/percentage-calculator.html">Percentage</a>
+<a href="/tip-calculator.html">Tip</a>
+<a href="/salary-calculator.html">Salary</a>
+<a href="/currency-converter.html">Currency</a>
+</nav>
+
+<main>
+
+<section class="card">
+
+<h2>Calculate Your Sale Price and Savings</h2>
+
+<p>Find out how much you will save on a purchase after applying percentage discounts, additional promotional discounts and estimated sales tax.</p>
+
+<label for="price">Original Price</label>
+<input id="price" type="number" min="0" step="0.01" value="200">
+
+<label for="discount">First Discount (%)</label>
+<input id="discount" type="number" min="0" max="100" step="any" value="25">
+
+<div class="presets">
+<button type="button" onclick="setDiscount(10)">10%</button>
+<button type="button" onclick="setDiscount(20)">20%</button>
+<button type="button" onclick="setDiscount(25)">25%</button>
+<button type="button" onclick="setDiscount(30)">30%</button>
+<button type="button" onclick="setDiscount(50)">50%</button>
+<button type="button" onclick="setDiscount(75)">75%</button>
+</div>
+
+<label for="extra">Additional Discount (%)</label>
+<input id="extra" type="number" min="0" max="100" step="any" value="10">
+
+<label for="tax">Sales Tax (%)</label>
+<input id="tax" type="number" min="0" max="100" step="any" value="8">
+
+<label for="currency">Currency</label>
+<select id="currency">
+<option value="USD">USD — US Dollar</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="EUR">EUR — Euro</option>
+<option value="CAD">CAD — Canadian Dollar</option>
+<option value="AUD">AUD — Australian Dollar</option>
+<option value="NGN">NGN — Nigerian Naira</option>
+<option value="INR">INR — Indian Rupee</option>
+<option value="JPY">JPY — Japanese Yen</option>
+<option value="ZAR">ZAR — South African Rand</option>
+<option value="CHF">CHF — Swiss Franc</option>
+</select>
+
+<button class="calculate" type="button" onclick="calculateDiscount()">Calculate Discount</button>
+
+<p id="error" role="alert"></p>
+
+<div id="results" class="result" aria-live="polite" hidden>
+
+<h3>Your Shopping Savings</h3>
+
+<p class="savings" id="savingHeadline"></p>
+
+<table>
+<thead>
+<tr><th>Description</th><th>Amount</th></tr>
+</thead>
+<tbody>
+<tr><td>Original Price</td><td id="original"></td></tr>
+<tr><td>First Discount Amount</td><td id="firstSaving"></td></tr>
+<tr><td>Price After First Discount</td><td id="firstPrice"></td></tr>
+<tr><td>Additional Discount Amount</td><td id="extraSaving"></td></tr>
+<tr><td>Total Savings Before Tax</td><td id="saving"></td></tr>
+<tr><td>Effective Discount</td><td id="effective"></td></tr>
+<tr><td>Final Sale Price Before Tax</td><td id="salePrice"></td></tr>
+<tr><td>Estimated Sales Tax</td><td id="taxAmount"></td></tr>
+<tr><td><strong>Total Amount Payable</strong></td><td id="total"></td></tr>
+</tbody>
+</table>
+
+<p><small>Discounts are applied sequentially. Sales tax is estimated using the final discounted price. Actual retailer rounding and tax rules may differ.</small></p>
+
+</div>
+</section>
+
+<section class="card">
+
+<h2>How to Calculate a Discount</h2>
+
+<p>A discount reduces the original selling price of a product or service. Discounts are commonly offered during promotional events, clearance sales, seasonal sales and special customer offers.</p>
+
+<h3>Discount Formula</h3>
+
+<p><strong>Discount Amount = Original Price × Discount Percentage ÷ 100</strong></p>
+
+<p><strong>Sale Price = Original Price − Discount Amount</strong></p>
+
+<h3>Simple Discount Example</h3>
+
+<p>A jacket originally costs $120 and is offered at a 25% discount.</p>
+
+<table>
+<tr><th>Description</th><th>Amount</th></tr>
+<tr><td>Original price</td><td>$120.00</td></tr>
+<tr><td>Discount percentage</td><td>25%</td></tr>
+<tr><td>Amount saved</td><td>$30.00</td></tr>
+<tr><td>Final sale price</td><td>$90.00</td></tr>
+</table>
+
+<h2>How Multiple Discounts Work</h2>
+
+<p>When a retailer offers two consecutive discounts, the second discount is normally calculated using the price remaining after the first discount. The percentages should not simply be added together.</p>
+
+<h3>Worked Example: Two Discounts and Sales Tax</h3>
+
+<p>Suppose a product costs $200. The retailer offers a 25% discount followed by an additional 10% discount. The applicable sales tax is 8% of the discounted price.</p>
+
+<table>
+<tr><th>Calculation</th><th>Amount</th></tr>
+<tr><td>Original price</td><td>$200.00</td></tr>
+<tr><td>First discount: 25%</td><td>$50.00</td></tr>
+<tr><td>Price after first discount</td><td>$150.00</td></tr>
+<tr><td>Additional discount: 10%</td><td>$15.00</td></tr>
+<tr><td>Final sale price</td><td>$135.00</td></tr>
+<tr><td>Total savings before tax</td><td>$65.00</td></tr>
+<tr><td>Effective discount</td><td>32.5%</td></tr>
+<tr><td>Sales tax: 8%</td><td>$10.80</td></tr>
+<tr><td>Total amount payable</td><td>$145.80</td></tr>
+</table>
+
+<h3>Effective Discount Formula</h3>
+
+<p><strong>Effective Discount (%) = 100 × [1 − (1 − First Discount ÷ 100) × (1 − Second Discount ÷ 100)]</strong></p>
+
+<p>For example, consecutive discounts of 25% and 10% produce an effective discount of 32.5%, rather than 35%.</p>
+
+<h2>Discount Reference Table</h2>
+
+<p>Use this table to compare common discounts on products with different original prices. All prices exclude sales tax.</p>
+
+<table>
+<tr><th>Original Price</th><th>10% Off</th><th>25% Off</th><th>50% Off</th></tr>
+<tr><td>$20</td><td>$18.00</td><td>$15.00</td><td>$10.00</td></tr>
+<tr><td>$50</td><td>$45.00</td><td>$37.50</td><td>$25.00</td></tr>
+<tr><td>$100</td><td>$90.00</td><td>$75.00</td><td>$50.00</td></tr>
+<tr><td>$200</td><td>$180.00</td><td>$150.00</td><td>$100.00</td></tr>
+<tr><td>$500</td><td>$450.00</td><td>$375.00</td><td>$250.00</td></tr>
+<tr><td>$1,000</td><td>$900.00</td><td>$750.00</td><td>$500.00</td></tr>
+</table>
+
+<h2>Practical Shopping Applications</h2>
+
+<h3>Comparing Retail Offers</h3>
+
+<p>A larger discount percentage does not always mean a lower final price. For example, a $150 product discounted by 40% costs $90, while a $100 product discounted by 20% costs $80. Compare the final prices rather than the advertised percentages.</p>
+
+<h3>Percentage Discounts vs. Fixed Coupons</h3>
+
+<p>A fixed $20 coupon provides greater savings than a 15% discount on a $100 purchase. However, a 15% discount on a $200 purchase saves $30. The better offer depends on the purchase amount and coupon restrictions.</p>
+
+<h3>Understanding Sales Tax</h3>
+
+<p>Sales tax can increase the amount you pay at checkout. This calculator assumes tax is applied after all discounts. Actual treatment may depend on local laws, coupon types and retailer policies.</p>
+
+<h3>Shopping Within a Budget</h3>
+
+<p>Calculate the final price, including taxes, before purchasing. A discounted item may still exceed your budget. Consider whether the purchase is necessary and compare equivalent products from other retailers.</p>
+
+<h3>Checking the Original Price</h3>
+
+<p>Verify that the advertised original price represents a meaningful comparison. Reviewing historical prices and competing retailers can help determine whether a promotion provides genuine savings.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>How much is 20% off $100?</h3>
+
+<p>The discount is $20, resulting in a sale price of $80 before tax.</p>
+
+<h3>How much is 30% off $250?</h3>
+
+<p>The discount is $75, resulting in a sale price of $175 before tax.</p>
+
+<h3>Is 50% off followed by 50% off a free purchase?</h3>
+
+<p>No. Two consecutive 50% discounts produce a 75% effective discount. A $100 product would cost $25 before tax.</p>
+
+<h3>How do I calculate the original price from a sale price?</h3>
+
+<p>Divide the sale price by one minus the discount expressed as a decimal. For example, an $80 sale price after a 20% discount corresponds to an original price of $100. This formula cannot determine the original price after a 100% discount.</p>
+
+<h3>Can I use this calculator without sales tax?</h3>
+
+<p>Yes. Enter zero in the sales tax field.</p>
+
+<h3>Can I calculate only one discount?</h3>
+
+<p>Yes. Set the additional discount to zero.</p>
+
+<h3>Does selecting another currency convert the price?</h3>
+
+<p>No. The currency selector changes the currency displayed. Use our <a href="/currency-converter.html">Currency Converter</a> for exchange-rate calculations.</p>
+
+<h2>Related Calculators</h2>
+
+<p>
+<a href="/percentage-calculator.html">Percentage Calculator</a> |
+<a href="/tip-calculator.html">Tip Calculator</a> |
+<a href="/salary-calculator.html">Salary Calculator</a> |
+<a href="/savings-calculator.html">Savings Calculator</a> |
+<a href="/currency-converter.html">Currency Converter</a> |
+<a href="/">Browse All Calculators</a>
+</p>
+
+<p><small>This calculator provides informational estimates. Actual prices, promotional eligibility, taxes and rounding may vary.</small></p>
+
+</section>
+
+</main>
+
+<footer>
+<p>© 2026 Calculate All Things</p>
+<a href="/">Home</a>
+</footer>
+
+<script>
+
+const get = id => document.getElementById(id);
+
+function setDiscount(value){
+  get("discount").value = value;
+  calculateDiscount();
+}
+
+function calculateDiscount(){
+
+  const fields = ["price","discount","extra","tax"];
+
+  const price = Number(get("price").value);
+  const discount = Number(get("discount").value);
+  const extra = Number(get("extra").value);
+  const tax = Number(get("tax").value);
+  const currency = get("currency").value;
+
+  get("error").textContent = "";
+  get("results").hidden = true;
+
+  if(fields.some(id => get(id).value.trim() === "") ||
+     ![price,discount,extra,tax].every(Number.isFinite) ||
+     price < 0 ||
+     discount < 0 || discount > 100 ||
+     extra < 0 || extra > 100 ||
+     tax < 0 || tax > 100){
+
+    get("error").textContent =
+      "Enter a valid price and percentages between 0 and 100.";
+    return;
+  }
+
+  const formatter = new Intl.NumberFormat("en-US",{
+    style:"currency",
+    currency:currency
+  });
+
+  const digits =
+    formatter.resolvedOptions().maximumFractionDigits;
+
+  const factor = Math.pow(10,digits);
+
+  const original = Math.round(price * factor);
+
+  const firstSaving =
+    Math.round(original * discount / 100);
+
+  const firstPrice = original - firstSaving;
+
+  const extraSaving =
+    Math.round(firstPrice * extra / 100);
+
+  const salePrice = firstPrice - extraSaving;
+
+  const savings = original - salePrice;
+
+  const effective = original > 0
+    ? savings / original * 100
+    : 0;
+
+  const taxAmount =
+    Math.round(salePrice * tax / 100);
+
+  const total = salePrice + taxAmount;
+
+  if(![original,firstSaving,extraSaving,
+       salePrice,taxAmount,total].every(Number.isSafeInteger)){
+
+    get("error").textContent = "Amount is too large.";
+    return;
+  }
+
+  const format = units =>
+    formatter.format(units / factor);
+
+  get("original").textContent = format(original);
+
+  get("firstSaving").textContent = format(firstSaving);
+
+  get("firstPrice").textContent = format(firstPrice);
+
+  get("extraSaving").textContent = format(extraSaving);
+
+  get("saving").textContent = format(savings);
+
+  get("effective").textContent = original > 0
+    ? effective.toLocaleString("en-US",{
+        maximumFractionDigits:2
+      }) + "%"
+    : "Not applicable";
+
+  get("salePrice").textContent = format(salePrice);
+
+  get("taxAmount").textContent = format(taxAmount);
+
+  get("total").textContent = format(total);
+
+  get("savingHeadline").textContent =
+    "You save " + format(savings) + " before tax!";
+
+  get("results").hidden = false;
+}
+
+calculateDiscount();
+
+</script>
+
+</body>
+</html>
