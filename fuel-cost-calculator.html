@@ -1,0 +1,525 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fuel Cost Calculator – Trip, Gas and Travel Expenses | Calculate All Things</title>
+<meta name="description" content="Calculate fuel costs for road trips, daily commutes and round-trip journeys. Supports MPG, kilometers per liter, liters per 100 km and shared travel expenses.">
+<link rel="canonical" href="https://calculateallthings.com/fuel-cost-calculator.html">
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7fb;color:#193047;line-height:1.7}
+header{background:#123c69;color:white;text-align:center;padding:25px}
+header h1{margin:0}
+nav{background:white;text-align:center;padding:15px;border-bottom:1px solid #ddd}
+nav a{color:#145b9b;margin:8px;text-decoration:none}
+main{max-width:900px;margin:25px auto;padding:0 15px}
+.card{background:white;border-radius:12px;padding:25px;margin-bottom:22px;box-shadow:0 3px 15px #123c6915}
+h2,h3{color:#123c69}
+label{display:block;font-weight:bold;margin-top:15px}
+input,select{width:100%;padding:12px;border:1px solid #aebfcd;border-radius:7px;font-size:16px}
+button{background:#1463a5;color:white;border:0;border-radius:8px;padding:14px;font-size:17px;cursor:pointer;width:100%;margin-top:20px}
+button:hover{background:#123c69}
+table{width:100%;border-collapse:collapse}
+td,th{padding:12px;text-align:left;border-bottom:1px solid #ddd}
+th{background:#123c69;color:white}
+.result{background:#eaf5ff;padding:18px;margin-top:20px;border-radius:10px}
+footer{text-align:center;padding:25px;color:#526779}
+a{color:#145b9b}
+#error{color:#b00020}
+.headline{font-size:26px;font-weight:bold;color:#123c69}
+.table-wrap{overflow-x:auto}
+small{color:#526779}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Fuel Cost Calculator</h1>
+<p>Calculate All Things</p>
+</header>
+
+<nav>
+<a href="/">Home</a>
+<a href="/sales-tax-calculator.html">Sales Tax</a>
+<a href="/discount-calculator.html">Discount</a>
+<a href="/inflation-calculator.html">Inflation</a>
+</nav>
+
+<main>
+
+<section class="card">
+
+<h2>Calculate Your Journey Fuel Cost</h2>
+
+<p>Estimate how much fuel your journey requires, the total fuel expense and the cost per traveler. Compare driving costs for road trips, work commutes and family vacations.</p>
+
+<label for="system">Measurement System</label>
+<select id="system" onchange="updateUnits()">
+<option value="us">Miles and US Gallons (MPG)</option>
+<option value="uk">Miles and Imperial Gallons (MPG)</option>
+<option value="metric">Kilometers and Liters (L/100 km)</option>
+<option value="kml">Kilometers per Liter (km/L)</option>
+</select>
+
+<label for="distance" id="distanceLabel">One-Way Distance (Miles)</label>
+<input id="distance" type="number" min="0.01" step="any" value="300">
+
+<label for="efficiency" id="efficiencyLabel">Fuel Economy (MPG)</label>
+<input id="efficiency" type="number" min="0.01" step="any" value="25">
+
+<label for="price" id="priceLabel">Fuel Price per US Gallon</label>
+<input id="price" type="number" min="0" step="any" value="3.50">
+
+<label for="trip">Journey Type</label>
+<select id="trip">
+<option value="1">One-Way Trip</option>
+<option value="2">Round Trip</option>
+</select>
+
+<label for="trips">Number of Identical Journeys</label>
+<input id="trips" type="number" min="1" step="1" value="1">
+
+<label for="passengers">Number of Travelers Including Driver</label>
+<input id="passengers" type="number" min="1" step="1" value="1">
+
+<label for="extra">Additional Cost per Journey (Tolls, Parking, etc.)</label>
+<input id="extra" type="number" min="0" step="0.01" value="0">
+
+<label for="currency">Currency</label>
+<select id="currency">
+<option value="USD">USD — US Dollar</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="EUR">EUR — Euro</option>
+<option value="CAD">CAD — Canadian Dollar</option>
+<option value="AUD">AUD — Australian Dollar</option>
+<option value="NGN">NGN — Nigerian Naira</option>
+<option value="INR">INR — Indian Rupee</option>
+<option value="JPY">JPY — Japanese Yen</option>
+<option value="ZAR">ZAR — South African Rand</option>
+<option value="CHF">CHF — Swiss Franc</option>
+</select>
+
+<button type="button" onclick="calculateFuel()">Calculate Fuel Cost</button>
+
+<p id="error" role="alert"></p>
+
+<div id="results" class="result" aria-live="polite" hidden>
+
+<h3>Estimated Travel Expenses</h3>
+
+<p class="headline" id="headline"></p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Description</th><th>Result</th></tr>
+</thead>
+<tbody>
+<tr><td>Total Travel Distance</td><td id="totalDistance"></td></tr>
+<tr><td>Total Fuel Required</td><td id="fuelRequired"></td></tr>
+<tr><td>Total Fuel Cost</td><td id="fuelCost"></td></tr>
+<tr><td>Additional Expenses</td><td id="extraCost"></td></tr>
+<tr><td><strong>Total Journey Cost</strong></td><td id="totalCost"></td></tr>
+<tr><td>Average Cost per Journey</td><td id="perTrip"></td></tr>
+<tr><td>Fuel Cost per Distance Unit</td><td id="perDistance"></td></tr>
+<tr><td>Fuel Cost per Traveler</td><td id="fuelPerson"></td></tr>
+<tr><td>Total Cost per Traveler</td><td id="perPerson"></td></tr>
+</tbody>
+</table>
+</div>
+
+<p><small>Estimates assume constant fuel prices and fuel efficiency throughout all journeys. Actual expenses may differ.</small></p>
+
+</div>
+
+</section>
+
+<section class="card">
+
+<h2>How to Calculate Fuel Costs</h2>
+
+<p>The cost of driving depends primarily on travel distance, vehicle fuel efficiency and the price of fuel. This calculator combines these factors to estimate the fuel expense of your journey.</p>
+
+<h3>Fuel Cost Formula Using MPG</h3>
+
+<p><strong>Fuel Required = Total Distance in Miles ÷ Miles per Gallon</strong></p>
+
+<p><strong>Fuel Cost = Fuel Required × Price per Gallon</strong></p>
+
+<h3>Fuel Cost Formula Using Liters per 100 Kilometers</h3>
+
+<p><strong>Fuel Required = Distance in Kilometers × Fuel Consumption ÷ 100</strong></p>
+
+<p><strong>Fuel Cost = Liters Required × Price per Liter</strong></p>
+
+<h3>Fuel Cost Formula Using Kilometers per Liter</h3>
+
+<p><strong>Fuel Required = Distance in Kilometers ÷ Kilometers per Liter</strong></p>
+
+<p><strong>Fuel Cost = Liters Required × Price per Liter</strong></p>
+
+<h2>Worked Example: American Road Trip</h2>
+
+<p>Suppose you are planning a 300-mile one-way journey in a vehicle that averages 25 miles per US gallon. Gasoline costs $3.50 per gallon.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Description</th><th>Amount</th></tr>
+<tr><td>One-way distance</td><td>300 miles</td></tr>
+<tr><td>Fuel economy</td><td>25 MPG</td></tr>
+<tr><td>Gasoline price</td><td>$3.50 per gallon</td></tr>
+<tr><td>Fuel required</td><td>12 gallons</td></tr>
+<tr><td>One-way fuel cost</td><td>$42.00</td></tr>
+<tr><td>Round-trip fuel cost</td><td>$84.00</td></tr>
+<tr><td>Round-trip fuel cost per traveler (4 travelers)</td><td>$21.00</td></tr>
+</table>
+</div>
+
+<h2>Worked Example: Metric Fuel Calculation</h2>
+
+<p>A vehicle travels 500 kilometers, consumes 7 liters per 100 kilometers and uses fuel costing €1.80 per liter.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Description</th><th>Amount</th></tr>
+<tr><td>Distance</td><td>500 km</td></tr>
+<tr><td>Fuel consumption</td><td>7 L/100 km</td></tr>
+<tr><td>Fuel required</td><td>35 liters</td></tr>
+<tr><td>Fuel price</td><td>€1.80 per liter</td></tr>
+<tr><td>Total fuel cost</td><td>€63.00</td></tr>
+</table>
+</div>
+
+<h2>Compare Vehicles by Fuel Efficiency</h2>
+
+<p>The following example compares fuel expenses for a 500-mile journey when gasoline costs $3.50 per US gallon.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Fuel Economy</th><th>Fuel Required</th><th>Fuel Cost</th></tr>
+<tr><td>15 MPG</td><td>33.33 gallons</td><td>$116.67</td></tr>
+<tr><td>20 MPG</td><td>25 gallons</td><td>$87.50</td></tr>
+<tr><td>25 MPG</td><td>20 gallons</td><td>$70.00</td></tr>
+<tr><td>30 MPG</td><td>16.67 gallons</td><td>$58.33</td></tr>
+<tr><td>40 MPG</td><td>12.50 gallons</td><td>$43.75</td></tr>
+<tr><td>50 MPG</td><td>10 gallons</td><td>$35.00</td></tr>
+</table>
+</div>
+
+<p>In this example, a vehicle averaging 40 MPG saves $43.75 compared with a vehicle averaging 20 MPG.</p>
+
+<h2>Estimate Monthly Commuting Expenses</h2>
+
+<p>Consider a commuter who drives 20 miles each way to work, travels 22 working days per month, averages 30 MPG and pays $3.50 per gallon.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Description</th><th>Amount</th></tr>
+<tr><td>Daily round-trip distance</td><td>40 miles</td></tr>
+<tr><td>Monthly driving distance</td><td>880 miles</td></tr>
+<tr><td>Monthly fuel consumption</td><td>29.33 gallons</td></tr>
+<tr><td>Monthly fuel cost</td><td>$102.67</td></tr>
+<tr><td>Estimated annual fuel cost</td><td>$1,232.00</td></tr>
+</table>
+</div>
+
+<p>To reproduce this example, enter 20 miles, 30 MPG, $3.50 per gallon, round trip and 22 journeys. The annual estimate assumes 12 identical months.</p>
+
+<h2>Factors That Affect Fuel Consumption</h2>
+
+<ul>
+<li><strong>Driving speed:</strong> High speeds can increase fuel consumption.</li>
+<li><strong>Traffic:</strong> Frequent stopping, acceleration and idling can reduce fuel efficiency.</li>
+<li><strong>Tire pressure:</strong> Underinflated tires can increase rolling resistance.</li>
+<li><strong>Vehicle weight:</strong> Heavy loads generally require more energy to transport.</li>
+<li><strong>Weather:</strong> Cold temperatures and air-conditioning use may affect fuel consumption.</li>
+<li><strong>Road conditions:</strong> Hills, rough surfaces and headwinds may increase fuel use.</li>
+<li><strong>Vehicle maintenance:</strong> Proper maintenance can help preserve normal fuel efficiency.</li>
+</ul>
+
+<h2>Ways to Reduce Travel Fuel Expenses</h2>
+
+<ul>
+<li>Combine errands into fewer journeys.</li>
+<li>Maintain manufacturer-recommended tire pressure.</li>
+<li>Avoid unnecessary idling.</li>
+<li>Accelerate and brake smoothly when safe.</li>
+<li>Remove unnecessary cargo.</li>
+<li>Compare fuel prices before refueling.</li>
+<li>Consider carpooling or public transportation.</li>
+<li>Use realistic fuel economy estimates when planning trips.</li>
+</ul>
+
+<h2>Understanding Fuel Measurement Units</h2>
+
+<p>Different countries measure vehicle fuel consumption differently. US MPG and Imperial MPG are not interchangeable because their gallon sizes differ.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Unit</th><th>Equivalent</th></tr>
+<tr><td>1 US gallon</td><td>3.785411784 liters</td></tr>
+<tr><td>1 Imperial gallon</td><td>4.54609 liters</td></tr>
+<tr><td>1 mile</td><td>1.609344 kilometers</td></tr>
+</table>
+</div>
+
+<p>When using Imperial MPG, enter the fuel price per Imperial gallon. When using US MPG, enter the price per US gallon. For metric calculations, enter the price per liter.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>How much gas do I need for a 300-mile trip?</h3>
+
+<p>At 25 MPG, a 300-mile trip requires approximately 12 gallons of gasoline.</p>
+
+<h3>How do I calculate round-trip fuel costs?</h3>
+
+<p>Select Round Trip and enter the one-way distance. The calculator doubles that distance before calculating fuel consumption.</p>
+
+<h3>How do I split fuel expenses between travelers?</h3>
+
+<p>Enter the total number of travelers, including the driver. The calculator divides the fuel and total journey expenses equally among them.</p>
+
+<h3>Can I include tolls and parking?</h3>
+
+<p>Yes. Enter the combined additional expense for each complete journey. For a round trip, include the additional expenses for both directions in that amount.</p>
+
+<h3>Does the calculator use live gasoline prices?</h3>
+
+<p>No. Enter the current or expected fuel price for your location.</p>
+
+<h3>Can I calculate diesel fuel costs?</h3>
+
+<p>Yes. The same formulas apply to gasoline, diesel and other liquid fuels when the appropriate consumption rate and price are entered.</p>
+
+<h3>Does this calculate the full cost of owning a vehicle?</h3>
+
+<p>No. It estimates fuel and manually entered additional travel expenses. Vehicle depreciation, insurance, maintenance, financing and registration are not automatically included.</p>
+
+<h3>Does changing the measurement system convert my existing inputs?</h3>
+
+<p>No. Changing the measurement system resets the distance, efficiency and fuel price to illustrative values. Enter the appropriate values for your vehicle and location.</p>
+
+<h3>Does changing currency convert fuel prices?</h3>
+
+<p>No. The currency selector changes the displayed monetary unit only. It does not perform currency conversion.</p>
+
+<h2>Useful Fuel Economy Resources</h2>
+
+<ul>
+<li><a href="https://www.fueleconomy.gov/" target="_blank" rel="noopener noreferrer">U.S. Department of Energy — Fuel Economy Information</a></li>
+<li><a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener noreferrer">U.S. Energy Information Administration — Gasoline and Diesel Fuel Prices</a></li>
+</ul>
+
+<h2>Related Calculators</h2>
+
+<p>
+<a href="/inflation-calculator.html">Inflation Calculator</a> |
+<a href="/salary-calculator.html">Salary Calculator</a> |
+<a href="/currency-converter.html">Currency Converter</a> |
+<a href="/savings-calculator.html">Savings Calculator</a> |
+<a href="/">Browse All Calculators</a>
+</p>
+
+<p><small>This calculator provides estimates for educational and travel planning purposes. Actual fuel consumption and travel expenses may vary.</small></p>
+
+</section>
+
+</main>
+
+<footer>
+<p>© 2026 Calculate All Things</p>
+<a href="/">Home</a>
+</footer>
+
+<script>
+
+const get = id => document.getElementById(id);
+
+function updateUnits(){
+
+  const system = get("system").value;
+
+  const metric = system === "metric" || system === "kml";
+
+  get("distanceLabel").textContent =
+    metric ? "One-Way Distance (Kilometers)" :
+    "One-Way Distance (Miles)";
+
+  if(system === "us"){
+
+    get("efficiencyLabel").textContent =
+      "Fuel Economy (US MPG)";
+
+    get("priceLabel").textContent =
+      "Fuel Price per US Gallon";
+
+    get("distance").value = 300;
+    get("efficiency").value = 25;
+    get("price").value = 3.50;
+
+  }else if(system === "uk"){
+
+    get("efficiencyLabel").textContent =
+      "Fuel Economy (Imperial MPG)";
+
+    get("priceLabel").textContent =
+      "Fuel Price per Imperial Gallon";
+
+    get("distance").value = 300;
+    get("efficiency").value = 35;
+    get("price").value = 7;
+
+  }else if(system === "metric"){
+
+    get("efficiencyLabel").textContent =
+      "Fuel Consumption (Liters per 100 km)";
+
+    get("priceLabel").textContent =
+      "Fuel Price per Liter";
+
+    get("distance").value = 500;
+    get("efficiency").value = 7;
+    get("price").value = 1.80;
+
+  }else{
+
+    get("efficiencyLabel").textContent =
+      "Fuel Economy (Kilometers per Liter)";
+
+    get("priceLabel").textContent =
+      "Fuel Price per Liter";
+
+    get("distance").value = 500;
+    get("efficiency").value = 15;
+    get("price").value = 1.80;
+
+  }
+
+  get("results").hidden = true;
+  get("error").textContent = "";
+
+}
+
+function calculateFuel(){
+
+  const system = get("system").value;
+  const distance = Number(get("distance").value);
+  const efficiency = Number(get("efficiency").value);
+  const price = Number(get("price").value);
+  const trip = Number(get("trip").value);
+  const trips = Number(get("trips").value);
+  const passengers = Number(get("passengers").value);
+  const extra = Number(get("extra").value);
+  const currency = get("currency").value;
+
+  get("error").textContent = "";
+  get("results").hidden = true;
+
+  const fields = [
+    "distance","efficiency","price",
+    "trips","passengers","extra"
+  ];
+
+  if(fields.some(id => get(id).value.trim() === "") ||
+    ![distance,efficiency,price,trips,passengers,extra]
+    .every(Number.isFinite) ||
+    distance <= 0 ||
+    efficiency <= 0 ||
+    price < 0 ||
+    trips < 1 ||
+    passengers < 1 ||
+    extra < 0 ||
+    !Number.isInteger(trips) ||
+    !Number.isInteger(passengers)){
+
+    get("error").textContent =
+      "Enter valid positive distance and fuel efficiency, nonnegative prices, and whole numbers for journeys and travelers.";
+
+    return;
+
+  }
+
+  const totalDistance = distance * trip * trips;
+
+  const fuelRequired = system === "metric"
+    ? totalDistance * efficiency / 100
+    : totalDistance / efficiency;
+
+  const fuelCost = fuelRequired * price;
+  const extraCost = extra * trips;
+  const totalCost = fuelCost + extraCost;
+
+  const perTrip = totalCost / trips;
+  const perDistance = fuelCost / totalDistance;
+  const fuelPerson = fuelCost / passengers;
+  const perPerson = totalCost / passengers;
+
+  if(![
+    totalDistance,fuelRequired,fuelCost,
+    extraCost,totalCost,perTrip,perDistance,
+    fuelPerson,perPerson
+  ].every(Number.isFinite)){
+
+    get("error").textContent =
+      "The selected values produce a result that is too large.";
+
+    return;
+
+  }
+
+  const metric = system === "metric" || system === "kml";
+
+  const distanceUnit = metric ? "km" : "miles";
+
+  const fuelUnit = metric ? "liters" :
+    system === "uk" ? "Imperial gallons" : "US gallons";
+
+  const formatter = new Intl.NumberFormat("en-US",{
+    style:"currency",
+    currency:currency
+  });
+
+  const format = value => formatter.format(value);
+
+  const number = value => value.toLocaleString("en-US",{
+    maximumFractionDigits:2
+  });
+
+  get("headline").textContent =
+    "Total estimated cost: " + format(totalCost);
+
+  get("totalDistance").textContent =
+    number(totalDistance) + " " + distanceUnit;
+
+  get("fuelRequired").textContent =
+    number(fuelRequired) + " " + fuelUnit;
+
+  get("fuelCost").textContent = format(fuelCost);
+
+  get("extraCost").textContent = format(extraCost);
+
+  get("totalCost").textContent = format(totalCost);
+
+  get("perTrip").textContent = format(perTrip);
+
+  get("perDistance").textContent =
+    format(perDistance) + (metric ? " / km" : " / mile");
+
+  get("fuelPerson").textContent = format(fuelPerson);
+
+  get("perPerson").textContent = format(perPerson);
+
+  get("results").hidden = false;
+
+}
+
+calculateFuel();
+
+</script>
+
+</body>
+</html>
